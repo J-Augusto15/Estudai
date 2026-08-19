@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estudai| O site para seus estudos</title>
+<title>Estudai</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -72,6 +72,7 @@ header{
 
 .mode-switch{
   display:flex;
+  flex-wrap:wrap;
   gap:6px;
   background: var(--card);
   border: 1px solid var(--line);
@@ -81,17 +82,21 @@ header{
   box-shadow: var(--shadow);
 }
 .mode-btn{
-  flex:1;
+  flex: 1 1 calc(50% - 6px);
   border:none;
   background:transparent;
   color: var(--ink-soft);
   font-family:'Plus Jakarta Sans', sans-serif;
   font-weight:700;
-  font-size:14px;
-  padding: 11px 10px;
+  font-size:13px;
+  padding: 10px 6px;
   border-radius: 10px;
   cursor:pointer;
   transition: all .15s ease;
+  white-space:nowrap;
+}
+@media (min-width: 480px){
+  .mode-btn{ flex:1; }
 }
 .mode-btn.active{
   background: linear-gradient(135deg, var(--violet), var(--coral));
@@ -589,6 +594,8 @@ button.secondary:active{ transform: scale(0.97); }
   <div class="mode-switch" id="modeSwitch">
     <button class="mode-btn active" id="modeBtnEstudos" data-mode="estudos">📚 Estudos</button>
     <button class="mode-btn" id="modeBtnRedacao" data-mode="redacao">✍️ Redação</button>
+    <button class="mode-btn" id="modeBtnPlano" data-mode="plano">🗓️ Plano</button>
+    <button class="mode-btn" id="modeBtnSimulado" data-mode="simulado">📝 Simulado</button>
   </div>
 
   <div class="mode-panel active" id="modeEstudos">
@@ -617,19 +624,6 @@ button.secondary:active{ transform: scale(0.97); }
       <div class="chip"><input type="checkbox" id="t6" value="Linha do tempo (se o tema tiver uma progressão cronológica ou de etapas)"><label for="t6">Linha do tempo</label></div>
       <div class="chip"><input type="checkbox" id="t7" value="Quadro comparativo (tabela) entre os conceitos ou eventos principais do tema"><label for="t7">Quadro comparativo</label></div>
       <div class="chip"><input type="checkbox" id="t8" value="Explicação didática, como se estivesse ensinando o tema do zero para alguém que nunca viu o assunto"><label for="t8">Explicação didática</label></div>
-      <div class="chip"><input type="checkbox" id="t9" value="Plano de estudos dividido em etapas para dominar esse tema"><label for="t9">Plano de estudos</label></div>
-    </div>
-    <div class="plano-extra" id="planoExtra">
-      <div class="row">
-        <span class="row-label">Dias até a prova/teste</span>
-        <input type="number" id="diasProva" min="1" placeholder="Ex: 12">
-      </div>
-      <div class="row">
-        <span class="row-label">Horas de estudo por dia</span>
-        <input type="number" id="horasDia" min="0.5" step="0.5" placeholder="Ex: 3">
-        <p class="mini-hint">O plano vai distribuir esse tempo dia a dia, dando mais horas pros temas mais pesados e menos pros mais leves.</p>
-      </div>
-      <p class="plano-warning" id="planoWarning">⚠️ Preencha os dias e as horas por dia pra gerar um cronograma completo.</p>
     </div>
   </div>
 
@@ -666,7 +660,7 @@ button.secondary:active{ transform: scale(0.97); }
     </div>
     <div class="row" style="margin-bottom:0;">
       <span class="row-label">Contexto (opcional)</span>
-      <input type="text" id="contexto" placeholder="Ex: vou usar isso pra prova...">
+      <input type="text" id="contexto" placeholder="Ex: vou usar isso pra prova de bolsa dia 29">
     </div>
   </div>
   </div>
@@ -730,16 +724,117 @@ button.secondary:active{ transform: scale(0.97); }
   </div>
   </div>
 
+  <div class="mode-panel" id="modePlano">
   <div class="step">
-    <h2><span class="step-num">✧</span>Preferências extras</h2>
-    <p class="hint">Vale para os dois modos.</p>
+    <h2><span class="step-num">1</span>Matérias e temas</h2>
+    <p class="hint">Liste tudo que precisa estudar — um por linha ou separado por vírgula.</p>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">O que você precisa estudar</span>
+      <textarea id="materiasPlano" placeholder="Ex: Química - Ligações químicas&#10;Matemática - Trigonometria&#10;História - Independência do Brasil" style="width:100%; min-height:100px; padding:11px 13px; border:2px solid var(--line); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; background:var(--field-bg); color:var(--ink); resize:vertical;"></textarea>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">2</span>Prazo e rotina</h2>
+    <p class="hint">O cronograma é montado dia a dia, com as datas certinhas.</p>
     <div class="row">
+      <span class="row-label">Data de início</span>
+      <input type="date" id="dataInicioPlano">
+    </div>
+    <div class="row">
+      <span class="row-label">Dias até a prova/teste</span>
+      <input type="number" id="diasProva" min="1" placeholder="Ex: 12">
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Horas de estudo por dia</span>
+      <input type="number" id="horasDia" min="0.5" step="0.5" placeholder="Ex: 3">
+      <p class="mini-hint">O plano distribui esse tempo dia a dia, dando mais horas pros temas pesados e menos pros leves.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">3</span>Ajustes do cronograma</h2>
+    <div class="row" style="display:flex; align-items:center; gap:10px;">
+      <input type="checkbox" id="diaRevisao" checked style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
+      <label for="diaRevisao" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir um dia de revisão geral antes da prova</label>
+    </div>
+    <div class="row" style="margin-bottom:0; display:flex; align-items:center; gap:10px;">
+      <input type="checkbox" id="diaDescanso" checked style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
+      <label for="diaDescanso" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir um dia de descanso antes da prova</label>
+    </div>
+  </div>
+  </div>
+
+  <div class="mode-panel" id="modeSimulado">
+  <div class="step">
+    <h2><span class="step-num">1</span>Matéria e tema</h2>
+    <p class="hint">Pode ser uma matéria só ou várias juntas, num simulado geral.</p>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">O que o simulado vai cobrir</span>
+      <textarea id="temaSimulado" placeholder="Ex: Química - Ligações químicas&#10;Matemática - Trigonometria&#10;ou apenas: Segunda Guerra Mundial" style="width:100%; min-height:90px; padding:11px 13px; border:2px solid var(--line); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; background:var(--field-bg); color:var(--ink); resize:vertical;"></textarea>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">2</span>Formato das questões</h2>
+    <p class="hint">Marque um ou mais tipos.</p>
+    <div class="chips" id="tiposSimulado">
+      <div class="chip"><input type="checkbox" id="s1" value="questões de múltipla escolha (5 alternativas, apenas uma correta)" checked><label for="s1">Múltipla escolha</label></div>
+      <div class="chip"><input type="checkbox" id="s2" value="questões discursivas/dissertativas, que exigem resposta escrita"><label for="s2">Discursiva</label></div>
+      <div class="chip"><input type="checkbox" id="s3" value="questões de verdadeiro ou falso"><label for="s3">Verdadeiro ou falso</label></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">3</span>Configurações</h2>
+    <div class="row">
+      <span class="row-label">Número de questões</span>
+      <input type="number" id="numQuestoes" min="1" placeholder="Ex: 20">
+    </div>
+    <div class="row">
+      <span class="row-label">Nível de dificuldade</span>
+      <select id="dificuldadeSimulado">
+        <option value="">Não especificar</option>
+        <option value="fácil">Fácil</option>
+        <option value="médio">Médio</option>
+        <option value="difícil">Difícil</option>
+        <option value="misto, variando entre fácil, médio e difícil">Misto</option>
+      </select>
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Modelo / banca</span>
+      <select id="modeloSimulado">
+        <option value="no formato padrão de prova escolar">Prova escolar padrão</option>
+        <option value="no modelo ENEM">ENEM</option>
+        <option value="no modelo de vestibular tradicional (Fuvest/Unicamp/UERJ)">Vestibular tradicional</option>
+        <option value="no modelo de concurso público">Concurso público</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">4</span>Extras</h2>
+    <div class="row" style="display:flex; align-items:center; gap:10px;">
+      <input type="checkbox" id="gabaritoComentado" checked style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
+      <label for="gabaritoComentado" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir gabarito comentado ao final</label>
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Tempo sugerido pra resolver (opcional)</span>
+      <input type="text" id="tempoSimulado" placeholder="Ex: 40 minutos">
+    </div>
+  </div>
+  </div>
+
+  <div class="step" id="extrasStep">
+    <h2><span class="step-num">✧</span>Preferências extras</h2>
+    <p class="hint">Só pra redação.</p>
+    <div class="row" style="margin-bottom:14px;">
       <span class="row-label">Série / ano escolar (opcional)</span>
       <input type="text" id="serie" placeholder="Ex: 9º ano, 3º ano do Ensino Médio...">
     </div>
-    <div class="row" style="margin-bottom:0; display:flex; align-items:center; gap:10px;">
-      <input type="checkbox" id="humanizado" style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
-      <label for="humanizado" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Escrever de forma humanizada e simples (linguagem natural, fácil de entender)</label>
+    <div class="chip" style="display:inline-block;">
+      <input type="checkbox" id="humanizado">
+      <label for="humanizado">💬 Usar palavras simples</label>
     </div>
   </div>
 
@@ -790,16 +885,6 @@ const contexto = document.getElementById('contexto');
 const promptText = document.getElementById('promptText');
 const tipos = document.querySelectorAll('#tipos input[type="checkbox"]');
 const formatoInputs = document.querySelectorAll('input[name="formato"]');
-const planoCheckbox = document.getElementById('t9');
-const planoExtra = document.getElementById('planoExtra');
-const diasProva = document.getElementById('diasProva');
-const horasDia = document.getElementById('horasDia');
-
-function togglePlanoExtra(){
-  planoExtra.classList.toggle('show', planoCheckbox.checked);
-}
-planoCheckbox.addEventListener('change', () => { togglePlanoExtra(); build(); });
-togglePlanoExtra();
 
 /* ---------- Redação: campos e lógica ---------- */
 const temaRedacao = document.getElementById('temaRedacao');
@@ -819,27 +904,150 @@ function toggleRevisaoExtra(){
 revisaoCheckbox.addEventListener('change', () => { toggleRevisaoExtra(); build(); });
 toggleRevisaoExtra();
 
+/* ---------- Plano de estudos: campos e lógica ---------- */
+const materiasPlano = document.getElementById('materiasPlano');
+const dataInicioPlano = document.getElementById('dataInicioPlano');
+const diasProva = document.getElementById('diasProva');
+const horasDia = document.getElementById('horasDia');
+const diaRevisao = document.getElementById('diaRevisao');
+const diaDescanso = document.getElementById('diaDescanso');
+
+/* Data de início padrão: hoje */
+(function setDefaultStartDate(){
+  const hoje = new Date();
+  const yyyy = hoje.getFullYear();
+  const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+  const dd = String(hoje.getDate()).padStart(2, '0');
+  dataInicioPlano.value = `${yyyy}-${mm}-${dd}`;
+})();
+
+/* ---------- Simulado: campos e lógica ---------- */
+const temaSimulado = document.getElementById('temaSimulado');
+const tiposSimulado = document.querySelectorAll('#tiposSimulado input[type="checkbox"]');
+const numQuestoes = document.getElementById('numQuestoes');
+const dificuldadeSimulado = document.getElementById('dificuldadeSimulado');
+const modeloSimulado = document.getElementById('modeloSimulado');
+const gabaritoComentado = document.getElementById('gabaritoComentado');
+const tempoSimulado = document.getElementById('tempoSimulado');
+
 /* ---------- Alternador de modo ---------- */
 let currentMode = 'estudos';
 const modeBtnEstudos = document.getElementById('modeBtnEstudos');
 const modeBtnRedacao = document.getElementById('modeBtnRedacao');
+const modeBtnPlano = document.getElementById('modeBtnPlano');
+const modeBtnSimulado = document.getElementById('modeBtnSimulado');
 const modeEstudos = document.getElementById('modeEstudos');
 const modeRedacao = document.getElementById('modeRedacao');
+const modePlano = document.getElementById('modePlano');
+const modeSimulado = document.getElementById('modeSimulado');
 
 function setMode(mode){
   currentMode = mode;
   modeBtnEstudos.classList.toggle('active', mode === 'estudos');
   modeBtnRedacao.classList.toggle('active', mode === 'redacao');
+  modeBtnPlano.classList.toggle('active', mode === 'plano');
+  modeBtnSimulado.classList.toggle('active', mode === 'simulado');
   modeEstudos.classList.toggle('active', mode === 'estudos');
   modeRedacao.classList.toggle('active', mode === 'redacao');
+  modePlano.classList.toggle('active', mode === 'plano');
+  modeSimulado.classList.toggle('active', mode === 'simulado');
+  document.getElementById('extrasStep').style.display = (mode === 'redacao') ? 'block' : 'none';
   build();
 }
 modeBtnEstudos.addEventListener('click', () => setMode('estudos'));
 modeBtnRedacao.addEventListener('click', () => setMode('redacao'));
+modeBtnPlano.addEventListener('click', () => setMode('plano'));
+modeBtnSimulado.addEventListener('click', () => setMode('simulado'));
 
 function build(){
   if(currentMode === 'redacao'){ buildRedacao(); return; }
+  if(currentMode === 'plano'){ buildPlano(); return; }
+  if(currentMode === 'simulado'){ buildSimulado(); return; }
   buildEstudos();
+}
+
+function buildSimulado(){
+  const t = temaSimulado.value.trim();
+  const selected = Array.from(tiposSimulado).filter(c => c.checked).map(c => c.value);
+
+  if(!t){
+    promptText.value = '';
+    return;
+  }
+
+  const qtd = numQuestoes.value ? numQuestoes.value : '10';
+  let p = `Quero que você monte um simulado com ${qtd} questões, ${modeloSimulado.value}, sobre:\n${t}\n\n`;
+
+  if(selected.length > 0){
+    p += `As questões devem ser: ${selected.join('; ')}.\n`;
+  } else {
+    p += `Pode variar o formato das questões como achar melhor.\n`;
+  }
+
+  if(dificuldadeSimulado.value) p += `Nível de dificuldade: ${dificuldadeSimulado.value}.\n`;
+  if(tempoSimulado.value.trim()) p += `Tempo sugerido para resolver: ${tempoSimulado.value.trim()}.\n`;
+
+  p += `Numere as questões e apresente todas primeiro, sem o gabarito no meio.\n`;
+
+  if(gabaritoComentado.checked){
+    p += `Ao final, apresente o gabarito completo com uma breve explicação de cada resposta correta.\n`;
+  } else {
+    p += `Não inclua o gabarito, só as questões.\n`;
+  }
+
+  promptText.value = p;
+}
+
+function formatDataBR(date){
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  return `${dd}/${mm}`;
+}
+
+function buildPlano(){
+  const materiasRaw = materiasPlano.value.trim();
+  const dias = parseInt(diasProva.value, 10);
+  const horas = horasDia.value;
+
+  if(!materiasRaw && !dias){
+    promptText.value = '';
+    return;
+  }
+
+  let p = `Quero que você monte um cronograma de estudos dia a dia para mim.\n\n`;
+
+  if(materiasRaw){
+    const lista = materiasRaw.split('\n').map(s => s.trim()).filter(Boolean);
+    p += `Preciso estudar o seguinte:\n`;
+    lista.forEach((item, i) => { p += `${i+1}. ${item}\n`; });
+    p += `\n`;
+  }
+
+  if(dias && dataInicioPlano.value){
+    const inicio = new Date(dataInicioPlano.value + 'T00:00:00');
+    const dayLabels = [];
+    for(let i = 0; i < dias; i++){
+      const d = new Date(inicio);
+      d.setDate(inicio.getDate() + i);
+      dayLabels.push(`Dia ${i+1} (${formatDataBR(d)})`);
+    }
+    p += `Monte o cronograma exatamente com estes dias e datas, um por vez, cada um com um título no formato "${dayLabels[0]}":\n`;
+    dayLabels.forEach(l => { p += `- ${l}\n`; });
+    p += `\nPara cada dia, diga claramente o que estudar e, se fizer sentido, quanto tempo dedicar a cada assunto naquele dia.\n`;
+  } else if(dias){
+    p += `Monte o cronograma dividido em ${dias} dias (Dia 1, Dia 2, Dia 3...), dizendo o que estudar em cada um.\n`;
+  }
+
+  if(horas) p += `Tenho ${horas} horas por dia disponíveis para estudar.\n`;
+
+  p += `Distribua o conteúdo de forma proporcional ao peso de cada tema: assuntos mais extensos, difíceis ou com mais questões devem receber mais tempo e/ou mais dias; assuntos mais curtos ou simples devem receber menos tempo.\n`;
+
+  if(diaRevisao.checked) p += `Inclua um dia de revisão geral de tudo, próximo ao final do cronograma, antes da prova.\n`;
+  if(diaDescanso.checked) p += `Inclua um dia de descanso, sem estudar nada, no dia anterior à prova.\n`;
+
+  p += `\nApresente o cronograma completo dia por dia, na ordem, sem resumir ou pular nenhum dia.`;
+
+  promptText.value = p;
 }
 
 function buildRedacao(){
@@ -900,22 +1108,6 @@ function buildEstudos(){
     p += `Monte um material de estudo completo sobre o tema.\n\n`;
   }
 
-  const planoWarning = document.getElementById('planoWarning');
-  if(planoCheckbox.checked && (!diasProva.value || !horasDia.value)){
-    planoWarning.classList.add('show');
-  } else {
-    planoWarning.classList.remove('show');
-  }
-
-  if(planoCheckbox.checked && (diasProva.value || horasDia.value)){
-    const dias = diasProva.value ? diasProva.value : '[quantidade de dias]';
-    const horas = horasDia.value ? horasDia.value : '[horas por dia]';
-    p += `Para o plano de estudos: tenho ${dias} dias até a prova/teste, com ${horas} horas por dia disponíveis para estudar.\n`;
-    p += `Detalhe o cronograma DIA A DIA (Dia 1, Dia 2, Dia 3...), dizendo o que estudar em cada dia e quantas horas dedicar a cada tema naquele dia.\n`;
-    p += `Distribua o tempo de forma proporcional ao peso de cada conteúdo: temas mais extensos, difíceis ou com mais questões devem receber mais horas e/ou mais dias; temas mais curtos ou simples devem receber menos tempo. Explique brevemente o motivo dessa distribuição.\n`;
-    p += `Se sobrar tempo, inclua um dia de revisão geral antes da prova e, se fizer sentido, um dia de descanso.\n`;
-  }
-
   if(formato === 'imagem'){
     p += `Entregue o conteúdo em formato de IMAGEM (crie uma imagem/infográfico visual com o conteúdo organizado), sem me mandar como texto corrido.\n`;
   } else if(formato === 'ambos'){
@@ -927,15 +1119,13 @@ function buildEstudos(){
   if(nivel.value) p += `Nível: ${nivel.value}.\n`;
   if(tamanho.value) p += `Tamanho/profundidade do conteúdo: ${tamanho.value}.\n`;
   if(contexto.value.trim()) p += `Contexto adicional: ${contexto.value.trim()}.\n`;
-  if(serie.value.trim()) p += `Minha série/ano escolar: ${serie.value.trim()}.\n`;
-  if(humanizado.checked) p += `Escreva de forma humanizada e simples, com linguagem natural, fácil de entender, sem parecer um texto robótico ou genérico.\n`;
 
   p += `\nUse linguagem clara e organize bem com títulos, listas ou tabelas quando fizer sentido.`;
 
   promptText.value = p;
 }
 
-[materia, tema, nivel, tamanho, contexto, diasProva, horasDia].forEach(el => el.addEventListener('input', build));
+[materia, tema, nivel, tamanho, contexto].forEach(el => el.addEventListener('input', build));
 tipos.forEach(c => c.addEventListener('change', build));
 formatoInputs.forEach(r => r.addEventListener('change', build));
 
@@ -943,6 +1133,17 @@ formatoInputs.forEach(r => r.addEventListener('change', build));
 modeloRedacao.addEventListener('change', build);
 tamanhoRedacao.addEventListener('change', build);
 tiposRedacao.forEach(c => c.addEventListener('change', build));
+
+[materiasPlano, dataInicioPlano, diasProva, horasDia].forEach(el => el.addEventListener('input', build));
+dataInicioPlano.addEventListener('change', build);
+diaRevisao.addEventListener('change', build);
+diaDescanso.addEventListener('change', build);
+
+[temaSimulado, numQuestoes, tempoSimulado].forEach(el => el.addEventListener('input', build));
+dificuldadeSimulado.addEventListener('change', build);
+modeloSimulado.addEventListener('change', build);
+gabaritoComentado.addEventListener('change', build);
+tiposSimulado.forEach(c => c.addEventListener('change', build));
 
 serie.addEventListener('input', build);
 humanizado.addEventListener('change', build);
@@ -1099,11 +1300,8 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   nivel.value = '';
   tamanho.value = '';
   contexto.value = '';
-  diasProva.value = '';
-  horasDia.value = '';
   tipos.forEach(c => c.checked = false);
   document.getElementById('f1').checked = true;
-  togglePlanoExtra();
 
   temaRedacao.value = '';
   modeloRedacao.selectedIndex = 0;
@@ -1112,6 +1310,28 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   tamanhoRedacao.value = '';
   contextoRedacao.value = '';
   toggleRevisaoExtra();
+
+  materiasPlano.value = '';
+  diasProva.value = '';
+  horasDia.value = '';
+  diaRevisao.checked = true;
+  diaDescanso.checked = true;
+  (function resetDate(){
+    const hoje = new Date();
+    const yyyy = hoje.getFullYear();
+    const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoje.getDate()).padStart(2, '0');
+    dataInicioPlano.value = `${yyyy}-${mm}-${dd}`;
+  })();
+
+  temaSimulado.value = '';
+  numQuestoes.value = '';
+  dificuldadeSimulado.selectedIndex = 0;
+  modeloSimulado.selectedIndex = 0;
+  gabaritoComentado.checked = true;
+  tempoSimulado.value = '';
+  tiposSimulado.forEach(c => c.checked = false);
+  document.getElementById('s1').checked = true;
 
   serie.value = '';
   humanizado.checked = false;
@@ -1221,6 +1441,7 @@ document.getElementById('clearHistoryBtn').addEventListener('click', async () =>
 
 loadHistory();
 
+document.getElementById('extrasStep').style.display = 'none';
 build();
 </script>
 </body>
