@@ -1,1657 +1,1481 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estudai</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
-    :root {
-      --bg1: #EAF3FF;
-      --bg2: #EAFBF3;
-      --bg3: #FFF6E3;
-      --ink: #17233D;
-      --ink-soft: #5C6B8A;
-      --violet: #2F6FED;
-      --violet-dark: #1E4FB8;
-      --coral: #17A98C;
-      --teal: #17A98C;
-      --sun: #FFB020;
-      --card: #FFFFFF;
-      --line: #DDE8FA;
-      --shadow: 0 6px 20px rgba(47, 111, 237, 0.12);
-      --field-bg: #FBFAFF;
-    }
-
-    [data-theme="dark"] {
-      --bg1: #10152A;
-      --bg2: #131A2E;
-      --bg3: #171223;
-      --ink: #EDF1FB;
-      --ink-soft: #99A3C2;
-      --violet: #6C93F5;
-      --violet-dark: #4C74E0;
-      --coral: #3ECFAF;
-      --teal: #3ECFAF;
-      --sun: #FFC24D;
-      --card: #1B2138;
-      --line: #2A3252;
-      --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
-      --field-bg: #212844;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: radial-gradient(circle at 8% 0%, var(--bg2) 0%, transparent 45%),
-        radial-gradient(circle at 95% 15%, var(--bg3) 0%, transparent 40%),
-        var(--bg1);
-      color: var(--ink);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      padding: 32px 16px 80px;
-      min-height: 100vh;
-      transition: background .25s ease, color .25s ease;
-    }
-
-    .wrap {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    header {
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-    }
-
-    .header-text {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .mode-switch {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 5px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .mode-btn {
-      flex: 1 1 calc(50% - 6px);
-      border: none;
-      background: transparent;
-      color: var(--ink-soft);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 10px 6px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all .15s ease;
-      white-space: nowrap;
-    }
-
-    @media (min-width: 480px) {
-      .mode-btn {
-        flex: 1;
-      }
-    }
-
-    .mode-btn.active {
-      background: linear-gradient(135deg, var(--violet), var(--coral));
-      color: #fff;
-    }
-
-    .mode-panel {
-      display: none;
-    }
-
-    .mode-panel.active {
-      display: block;
-    }
-
-    .theme-toggle {
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid var(--line);
-      background: var(--card);
-      cursor: pointer;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--shadow);
-      transition: transform .15s ease;
-    }
-
-    .theme-toggle:hover {
-      transform: scale(1.06);
-    }
-
-    .theme-toggle:active {
-      transform: scale(0.94);
-    }
-
-    .eyebrow {
-      display: inline-block;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #fff;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--violet), var(--coral));
-      padding: 5px 12px;
-      border-radius: 20px;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 32px;
-      font-weight: 700;
-      margin: 0 0 8px;
-      line-height: 1.1;
-      color: var(--violet-dark);
-    }
-
-    .sub {
-      color: var(--ink-soft);
-      font-size: 14.5px;
-      line-height: 1.5;
-      max-width: 54ch;
-      font-weight: 500;
-    }
-
-    .step {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      padding: 22px;
-      margin-bottom: 16px;
-    }
-
-    .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 26px;
-      height: 26px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, var(--violet), #A78BFA);
-      color: #fff;
-      font-family: 'Fredoka', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      margin-right: 10px;
-      flex-shrink: 0;
-    }
-
-    .step h2 {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 19px;
-      font-weight: 600;
-      margin: 0 0 4px;
-      display: flex;
-      align-items: center;
-      color: var(--ink);
-    }
-
-    .step p.hint {
-      color: var(--ink-soft);
-      font-size: 12.5px;
-      margin: 0 0 14px 36px;
-      font-weight: 500;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px 14px;
-      border: 2px solid var(--line);
-      border-radius: 12px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 14.5px;
-      font-weight: 500;
-      background: var(--field-bg);
-      color: var(--ink);
-    }
-
-    input[type="text"]:focus {
-      outline: none;
-      border-color: var(--violet);
-      background: var(--field-bg);
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-left: 36px;
-    }
-
-    .chip {
-      position: relative;
-    }
-
-    .chip input {
-      position: absolute;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      margin: 0;
-    }
-
-    .chip label {
-      display: block;
-      padding: 9px 15px;
-      border-radius: 20px;
-      border: 2px solid var(--line);
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--ink-soft);
-      cursor: pointer;
-      transition: all .15s ease;
-      background: var(--field-bg);
-    }
-
-    .chip input:checked+label {
-      background: linear-gradient(135deg, var(--violet), var(--coral));
-      border-color: transparent;
-      color: #fff;
-    }
-
-    .chip input:focus-visible+label {
-      outline: 2px solid var(--teal);
-      outline-offset: 2px;
-    }
-
-    .row {
-      margin-left: 36px;
-      margin-bottom: 14px;
-    }
-
-    .row:last-child {
-      margin-bottom: 0;
-    }
-
-    .row-label {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      color: var(--teal);
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    select {
-      width: 100%;
-      padding: 11px 13px;
-      border-radius: 12px;
-      border: 2px solid var(--line);
-      background: var(--field-bg);
-      color: var(--ink);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    .radio-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .radio-chip {
-      position: relative;
-    }
-
-    .radio-chip input {
-      position: absolute;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      margin: 0;
-    }
-
-    .radio-chip label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 9px 15px;
-      border-radius: 12px;
-      border: 2px solid var(--line);
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--ink-soft);
-      cursor: pointer;
-      background: var(--field-bg);
-      transition: all .15s ease;
-    }
-
-    .radio-chip input:checked+label {
-      background: var(--sun);
-      border-color: var(--sun);
-      color: var(--ink);
-    }
-
-    .output-box {
-      background: linear-gradient(135deg, var(--violet-dark), var(--violet));
-      color: #fff;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: var(--shadow);
-    }
-
-    .output-box h2 {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 19px;
-      margin: 0 0 12px;
-      display: flex;
-      align-items: center;
-      color: #fff;
-    }
-
-    .output-box .step-num {
-      background: var(--sun);
-      color: var(--ink);
-    }
-
-    #promptText {
-      width: 100%;
-      min-height: 170px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 12px;
-      color: #fff;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 13.5px;
-      line-height: 1.6;
-      padding: 14px;
-      resize: vertical;
-      margin-bottom: 14px;
-    }
-
-    #promptText::placeholder {
-      color: rgba(255, 255, 255, 0.55);
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    button.copy {
-      background: var(--sun);
-      color: var(--ink);
-      border: none;
-      padding: 12px 22px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 14px;
-      cursor: pointer;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: transform .1s ease;
-    }
-
-    button.copy:hover {
-      filter: brightness(1.06);
-    }
-
-    button.copy:active {
-      transform: scale(0.97);
-    }
-
-    button.copy:focus-visible {
-      outline: 2px solid #fff;
-      outline-offset: 2px;
-    }
-
-    .copied-msg {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #fff;
-      opacity: 0;
-      transition: opacity .2s ease;
-    }
-
-    .copied-msg.show {
-      opacity: 0.9;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--ink-soft);
-      font-size: 12px;
-      margin-top: 20px;
-      font-weight: 500;
-    }
-
-    .plano-extra {
-      display: none;
-      margin-left: 36px;
-      margin-top: 14px;
-      padding: 14px;
-      background: var(--field-bg);
-      border: 1.5px dashed var(--violet);
-      border-radius: 12px;
-    }
-
-    .plano-extra.show {
-      display: block;
-    }
-
-    .plano-extra .row {
-      margin-left: 0;
-      margin-bottom: 12px;
-    }
-
-    .plano-extra .row:last-child {
-      margin-bottom: 0;
-    }
-
-    .plano-extra .mini-hint {
-      font-size: 11.5px;
-      color: var(--ink-soft);
-      font-weight: 500;
-      margin-top: 6px;
-    }
-
-    .plano-warning {
-      display: none;
-      margin-top: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #B8590A;
-      background: #FFF1DC;
-      padding: 8px 10px;
-      border-radius: 8px;
-    }
-
-    [data-theme="dark"] .plano-warning {
-      color: #FFC97A;
-      background: rgba(255, 178, 32, 0.12);
-    }
-
-    .plano-warning.show {
-      display: block;
-    }
-
-    input[type="number"] {
-      width: 100%;
-      padding: 11px 13px;
-      border: 2px solid var(--line);
-      border-radius: 12px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 14.5px;
-      font-weight: 500;
-      background: var(--field-bg);
-      color: var(--ink);
-    }
-
-    input[type="number"]:focus {
-      outline: none;
-      border-color: var(--violet);
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    button.secondary {
-      background: rgba(255, 255, 255, 0.14);
-      color: #fff;
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      padding: 11px 18px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 13.5px;
-      cursor: pointer;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: all .12s ease;
-    }
-
-    button.secondary:hover {
-      background: rgba(255, 255, 255, 0.22);
-    }
-
-    button.secondary:active {
-      transform: scale(0.97);
-    }
-
-    .history-step {
-      margin-top: 16px;
-    }
-
-    .history-list {
-      margin-left: 36px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .history-empty {
-      margin-left: 36px;
-      font-size: 13px;
-      color: var(--ink-soft);
-      font-style: italic;
-    }
-
-    .history-item {
-      border: 1.5px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 12px;
-      background: var(--field-bg);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .history-item .hi-text {
-      font-size: 12.5px;
-      color: var(--ink-soft);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .history-item .hi-date {
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--teal);
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      flex-shrink: 0;
-    }
-
-    .history-item button {
-      flex-shrink: 0;
-      border: none;
-      background: var(--violet);
-      color: #fff;
-      font-size: 11.5px;
-      font-weight: 700;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .clear-history {
-      margin-left: 36px;
-      margin-top: 8px;
-      background: none;
-      border: none;
-      color: var(--ink-soft);
-      font-size: 12px;
-      text-decoration: underline;
-      cursor: pointer;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      padding: 0;
-    }
-
-    /* ---------- Modal de confirmação ---------- */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 20, 40, 0.55);
-      z-index: 999;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 0;
-    }
-
-    .modal-overlay.show {
-      display: flex;
-    }
-
-    .modal-box {
-      background: var(--card);
-      width: 100%;
-      max-width: 480px;
-      border-radius: 20px 20px 0 0;
-      padding: 24px 22px 28px;
-      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
-      animation: slideUp .22s ease;
-    }
-
-    @media (min-width: 560px) {
-      .modal-overlay {
-        align-items: center;
-      }
-
-      .modal-box {
-        border-radius: 20px;
-      }
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(24px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .modal-icon {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .modal-box h3 {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 18px;
-      margin: 0 0 6px;
-      color: var(--ink);
-    }
-
-    .modal-box p {
-      font-size: 13.5px;
-      color: var(--ink-soft);
-      margin: 0 0 20px;
-      line-height: 1.5;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .modal-actions button {
-      flex: 1;
-      padding: 13px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 14.5px;
-      cursor: pointer;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      border: none;
-    }
-
-    .modal-btn-yes {
-      background: linear-gradient(135deg, var(--violet), var(--coral));
-      color: #fff;
-    }
-
-    .modal-btn-no {
-      background: var(--field-bg);
-      color: var(--ink);
-      border: 2px solid var(--line) !important;
-    }
-
-    .modal-download {
-      display: block;
-      text-align: center;
-      margin-top: 14px;
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--violet);
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estudai</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg1: #EAF3FF;
+  --bg2: #EAFBF3;
+  --bg3: #FFF6E3;
+  --ink: #17233D;
+  --ink-soft: #5C6B8A;
+  --violet: #2F6FED;
+  --violet-dark: #1E4FB8;
+  --coral: #17A98C;
+  --teal: #17A98C;
+  --sun: #FFB020;
+  --card: #FFFFFF;
+  --line: #DDE8FA;
+  --shadow: 0 6px 20px rgba(47,111,237,0.12);
+  --field-bg: #FBFAFF;
+}
+
+[data-theme="dark"]{
+  --bg1: #10152A;
+  --bg2: #131A2E;
+  --bg3: #171223;
+  --ink: #EDF1FB;
+  --ink-soft: #99A3C2;
+  --violet: #6C93F5;
+  --violet-dark: #4C74E0;
+  --coral: #3ECFAF;
+  --teal: #3ECFAF;
+  --sun: #FFC24D;
+  --card: #1B2138;
+  --line: #2A3252;
+  --shadow: 0 6px 24px rgba(0,0,0,0.35);
+  --field-bg: #212844;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background: radial-gradient(circle at 8% 0%, var(--bg2) 0%, transparent 45%),
+              radial-gradient(circle at 95% 15%, var(--bg3) 0%, transparent 40%),
+              var(--bg1);
+  color:var(--ink);
+  font-family:'Plus Jakarta Sans', sans-serif;
+  padding: 32px 16px 80px;
+  min-height:100vh;
+  transition: background .25s ease, color .25s ease;
+}
+
+.wrap{
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+header{
+  margin-bottom: 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.header-text{ flex:1; min-width:0; }
+
+.mode-switch{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 5px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.mode-btn{
+  flex: 1 1 calc(50% - 6px);
+  border:none;
+  background:transparent;
+  color: var(--ink-soft);
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-weight:700;
+  font-size:13px;
+  padding: 10px 6px;
+  border-radius: 10px;
+  cursor:pointer;
+  transition: all .15s ease;
+  white-space:nowrap;
+}
+@media (min-width: 480px){
+  .mode-btn{ flex:1; }
+}
+.mode-btn.active{
+  background: linear-gradient(135deg, var(--violet), var(--coral));
+  color:#fff;
+}
+
+.mode-panel{ display:none; }
+.mode-panel.active{ display:block; }
+
+.theme-toggle{
+  flex-shrink:0;
+  width:40px; height:40px;
+  border-radius:50%;
+  border: 2px solid var(--line);
+  background: var(--card);
+  cursor:pointer;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: var(--shadow);
+  transition: transform .15s ease;
+}
+.theme-toggle:hover{ transform: scale(1.06); }
+.theme-toggle:active{ transform: scale(0.94); }
+
+.eyebrow{
+  display:inline-block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  font-weight:700;
+  background: linear-gradient(135deg, var(--violet), var(--coral));
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom:12px;
+}
+
+h1{
+  font-family:'Fredoka', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  line-height:1.1;
+  color: var(--violet-dark);
+}
+
+.sub{
+  color: var(--ink-soft);
+  font-size: 14.5px;
+  line-height:1.5;
+  max-width: 54ch;
+  font-weight:500;
+}
+
+.step{
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  margin-bottom: 16px;
+}
+
+.step-num{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:26px; height:26px;
+  border-radius:9px;
+  background: linear-gradient(135deg, var(--violet), #A78BFA);
+  color: #fff;
+  font-family:'Fredoka', sans-serif;
+  font-size:14px;
+  font-weight:600;
+  margin-right:10px;
+  flex-shrink:0;
+}
+
+.step h2{
+  font-family:'Fredoka', sans-serif;
+  font-size: 19px;
+  font-weight:600;
+  margin:0 0 4px;
+  display:flex;
+  align-items:center;
+  color: var(--ink);
+}
+
+.step p.hint{
+  color:var(--ink-soft);
+  font-size:12.5px;
+  margin: 0 0 14px 36px;
+  font-weight:500;
+}
+
+input[type="text"]{
+  width:100%;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight:500;
+  background: var(--field-bg);
+  color: var(--ink);
+}
+input[type="text"]:focus{
+  outline: none;
+  border-color: var(--violet);
+  background: var(--field-bg);
+}
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+  margin-left:36px;
+}
+
+.chip{ position:relative; }
+.chip input{
+  position:absolute;
+  opacity:0;
+  width:100%; height:100%;
+  cursor:pointer;
+  margin:0;
+}
+.chip label{
+  display:block;
+  padding: 9px 15px;
+  border-radius: 20px;
+  border: 2px solid var(--line);
+  font-size: 13.5px;
+  font-weight:700;
+  color: var(--ink-soft);
+  cursor:pointer;
+  transition: all .15s ease;
+  background: var(--field-bg);
+}
+.chip input:checked + label{
+  background: linear-gradient(135deg, var(--violet), var(--coral));
+  border-color: transparent;
+  color: #fff;
+}
+.chip input:focus-visible + label{
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.row{ margin-left:36px; margin-bottom: 14px; }
+.row:last-child{margin-bottom:0;}
+.row-label{
+  font-size:12px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color: var(--teal);
+  margin-bottom:8px;
+  display:block;
+}
+
+select{
+  width:100%;
+  padding: 11px 13px;
+  border-radius:12px;
+  border: 2px solid var(--line);
+  background: var(--field-bg);
+  color:var(--ink);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-weight:500;
+  font-size:14px;
+}
+
+.radio-group{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.radio-chip{ position:relative; }
+.radio-chip input{
+  position:absolute; opacity:0;
+  width:100%; height:100%;
+  cursor:pointer; margin:0;
+}
+.radio-chip label{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding: 9px 15px;
+  border-radius: 12px;
+  border: 2px solid var(--line);
+  font-size: 13.5px;
+  font-weight:700;
+  color: var(--ink-soft);
+  cursor:pointer;
+  background: var(--field-bg);
+  transition: all .15s ease;
+}
+.radio-chip input:checked + label{
+  background: var(--sun);
+  border-color: var(--sun);
+  color: var(--ink);
+}
+
+.output-box{
+  background: linear-gradient(135deg, var(--violet-dark), var(--violet));
+  color: #fff;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.output-box h2{
+  font-family:'Fredoka', sans-serif;
+  font-size:19px;
+  margin:0 0 12px;
+  display:flex;
+  align-items:center;
+  color:#fff;
+}
+.output-box .step-num{ background: var(--sun); color: var(--ink); }
+
+#promptText{
+  width:100%;
+  min-height: 170px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.6;
+  padding: 14px;
+  resize: vertical;
+  margin-bottom: 14px;
+}
+#promptText::placeholder{ color: rgba(255,255,255,0.55); }
+
+.actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+button.copy{
+  background: var(--sun);
+  color: var(--ink);
+  border:none;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-weight:800;
+  font-size:14px;
+  cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition: transform .1s ease;
+}
+button.copy:hover{ filter: brightness(1.06); }
+button.copy:active{ transform: scale(0.97); }
+button.copy:focus-visible{ outline:2px solid #fff; outline-offset:2px;}
+
+.copied-msg{
+  font-size:12.5px;
+  font-weight:700;
+  color: #fff;
+  opacity:0;
+  transition: opacity .2s ease;
+}
+.copied-msg.show{ opacity:0.9; }
+
+footer{
+  text-align:center;
+  color: var(--ink-soft);
+  font-size:12px;
+  margin-top:20px;
+  font-weight:500;
+}
+
+.plano-extra{
+  display:none;
+  margin-left:36px;
+  margin-top:14px;
+  padding: 14px;
+  background: var(--field-bg);
+  border: 1.5px dashed var(--violet);
+  border-radius: 12px;
+}
+.plano-extra.show{ display:block; }
+.plano-extra .row{ margin-left:0; margin-bottom:12px; }
+.plano-extra .row:last-child{ margin-bottom:0; }
+.plano-extra .mini-hint{
+  font-size:11.5px;
+  color: var(--ink-soft);
+  font-weight:500;
+  margin-top:6px;
+}
+.plano-warning{
+  display:none;
+  margin-top:8px;
+  font-size:12px;
+  font-weight:700;
+  color: #B8590A;
+  background: #FFF1DC;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+[data-theme="dark"] .plano-warning{
+  color: #FFC97A;
+  background: rgba(255,178,32,0.12);
+}
+.plano-warning.show{ display:block; }
+
+input[type="number"]{
+  width:100%;
+  padding: 11px 13px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight:500;
+  background: var(--field-bg);
+  color: var(--ink);
+}
+input[type="number"]:focus{
+  outline:none;
+  border-color: var(--violet);
+}
+
+.actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+button.secondary{
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-weight:700;
+  font-size:13.5px;
+  cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition: all .12s ease;
+}
+button.secondary:hover{ background: rgba(255,255,255,0.22); }
+button.secondary:active{ transform: scale(0.97); }
+
+.history-step{ margin-top:16px; }
+.history-list{ margin-left:36px; display:flex; flex-direction:column; gap:8px; }
+.history-empty{
+  margin-left:36px;
+  font-size:13px;
+  color: var(--ink-soft);
+  font-style:italic;
+}
+.history-item{
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--field-bg);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.history-item .hi-text{
+  font-size:12.5px;
+  color: var(--ink-soft);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex:1;
+  min-width:0;
+}
+.history-item .hi-date{
+  font-size:10.5px;
+  font-weight:700;
+  color: var(--teal);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  flex-shrink:0;
+}
+.history-item button{
+  flex-shrink:0;
+  border:none;
+  background: var(--violet);
+  color:#fff;
+  font-size:11.5px;
+  font-weight:700;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.history-item .hi-delete{
+  background: transparent;
+  color: var(--ink-soft);
+  font-size:14px;
+  padding: 4px 6px;
+}
+.history-item .hi-delete:hover{
+  color: var(--coral);
+}
+.clear-history{
+  margin-left:36px;
+  margin-top:8px;
+  background:none;
+  border:none;
+  color: var(--ink-soft);
+  font-size:12px;
+  text-decoration:underline;
+  cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  padding:0;
+}
+
+/* ---------- Modal de confirmação ---------- */
+.modal-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background: rgba(15,20,40,0.55);
+  z-index: 999;
+  align-items:flex-end;
+  justify-content:center;
+  padding: 0;
+}
+.modal-overlay.show{ display:flex; }
+
+.modal-box{
+  background: var(--card);
+  width:100%;
+  max-width:480px;
+  border-radius: 20px 20px 0 0;
+  padding: 24px 22px 28px;
+  box-shadow: 0 -8px 30px rgba(0,0,0,0.25);
+  animation: slideUp .22s ease;
+}
+@media (min-width: 560px){
+  .modal-overlay{ align-items:center; }
+  .modal-box{ border-radius: 20px; }
+}
+@keyframes slideUp{
+  from{ transform: translateY(24px); opacity:0; }
+  to{ transform: translateY(0); opacity:1; }
+}
+
+.modal-icon{
+  font-size: 28px;
+  margin-bottom:10px;
+}
+.modal-box h3{
+  font-family:'Fredoka', sans-serif;
+  font-size:18px;
+  margin:0 0 6px;
+  color: var(--ink);
+}
+.modal-box p{
+  font-size:13.5px;
+  color: var(--ink-soft);
+  margin:0 0 20px;
+  line-height:1.5;
+}
+.modal-actions{
+  display:flex;
+  gap:10px;
+}
+.modal-actions button{
+  flex:1;
+  padding: 13px;
+  border-radius: 12px;
+  font-weight:800;
+  font-size:14.5px;
+  cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  border: none;
+}
+.modal-btn-yes{
+  background: linear-gradient(135deg, var(--violet), var(--coral));
+  color:#fff;
+}
+.modal-btn-no{
+  background: var(--field-bg);
+  color: var(--ink);
+  border: 2px solid var(--line) !important;
+}
+
+.modal-download{
+  display:block;
+  text-align:center;
+  margin-top:14px;
+  font-size:12.5px;
+  font-weight:700;
+  color: var(--violet);
+  text-decoration:underline;
+}
+</style>
 </head>
-
 <body>
-  <div class="wrap">
-    <header>
-      <div class="header-text">
-        <span class="eyebrow">Estudai</span>
-        <h1>Estudai</h1>
-        <p class="sub">Escolha o tema, o tipo de material e o formato — o prompt pronto aparece embaixo pra você colar
-          no ChatGPT, no Claude ou onde quiser.</p>
-      </div>
-      <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo claro/escuro"
-        title="Alternar modo claro/escuro">🌙</button>
-    </header>
-
-    <div class="mode-switch" id="modeSwitch">
-      <button class="mode-btn active" id="modeBtnEstudos" data-mode="estudos">📚 Estudos</button>
-      <button class="mode-btn" id="modeBtnRedacao" data-mode="redacao">✍️ Redação</button>
-      <button class="mode-btn" id="modeBtnPlano" data-mode="plano">🗓️ Plano</button>
-      <button class="mode-btn" id="modeBtnSimulado" data-mode="simulado">📝 Simulado</button>
+<div class="wrap">
+  <header>
+    <div class="header-text">
+      <span class="eyebrow">Estudai</span>
+      <h1>Estudai</h1>
+      <p class="sub">Escolha o tema, o tipo de material e o formato — o Estudai monta automaticamente o comando que a IA precisa pra criar seu material de estudo personalizado.</p>
     </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">🌙</button>
+  </header>
 
-    <div class="mode-panel active" id="modeEstudos">
-      <div class="step">
-        <h2><span class="step-num">1</span>Tema e matéria</h2>
-        <p class="hint">Pode ser qualquer assunto, de qualquer matéria.</p>
-        <div class="row">
-          <span class="row-label">Matéria</span>
-          <input type="text" id="materia" placeholder="Ex: Química, História, Matemática, Inglês...">
-        </div>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">Tema específico</span>
-          <input type="text" id="tema" placeholder="Ex: Ligações químicas, Revolução Francesa, PG e PA...">
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">2</span>Tipo de material</h2>
-        <p class="hint">Marque um ou mais formatos que você quer receber.</p>
-        <div class="chips" id="tipos">
-          <div class="chip"><input type="checkbox" id="t1"
-              value="Mapa mental (em formato de tópicos e sub-tópicos indentados, mostrando as conexões entre os conceitos)"><label
-              for="t1">Mapa mental</label></div>
-          <div class="chip"><input type="checkbox" id="t2" value="Resumo completo e organizado por sub-temas"><label
-              for="t2">Resumo</label></div>
-          <div class="chip"><input type="checkbox" id="t3"
-              value="Bloco de notas com os pontos-chave em frases curtas e diretas"><label for="t3">Bloco de
-              notas</label></div>
-          <div class="chip"><input type="checkbox" id="t4"
-              value="Flashcards no formato pergunta/resposta (pelo menos 10 cards)"><label for="t4">Flashcards</label>
-          </div>
-          <div class="chip"><input type="checkbox" id="t5"
-              value="Lista de questões de revisão com gabarito comentado ao final"><label for="t5">Questões de
-              revisão</label></div>
-          <div class="chip"><input type="checkbox" id="t6"
-              value="Linha do tempo (se o tema tiver uma progressão cronológica ou de etapas)"><label for="t6">Linha do
-              tempo</label></div>
-          <div class="chip"><input type="checkbox" id="t7"
-              value="Quadro comparativo (tabela) entre os conceitos ou eventos principais do tema"><label
-              for="t7">Quadro comparativo</label></div>
-          <div class="chip"><input type="checkbox" id="t8"
-              value="Explicação didática, como se estivesse ensinando o tema do zero para alguém que nunca viu o assunto"><label
-              for="t8">Explicação didática</label></div>
-          <div class="chip"><input type="checkbox" id="t10"
-              value="Revisão do conteúdo que eu já estudei: destaque os pontos principais para reforçar, aponte o que costuma ser mais cobrado ou confundido, e termine com um mini teste rápido de autoavaliação (perguntas com gabarito) sobre o que foi revisado"><label
-              for="t10">Revisão</label></div>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">3</span>Formato da entrega</h2>
-        <p class="hint">Você quer receber em texto, em imagem, ou nos dois?</p>
-        <div class="radio-group" id="formatoGroup" style="margin-left:36px;">
-          <div class="radio-chip"><input type="radio" name="formato" id="f1" value="texto" checked><label for="f1">✍️ Só
-              texto</label></div>
-          <div class="radio-chip"><input type="radio" name="formato" id="f2" value="imagem"><label for="f2">🖼️ Só
-              imagem</label></div>
-          <div class="radio-chip"><input type="radio" name="formato" id="f3" value="ambos"><label for="f3">✨ Texto e
-              imagem</label></div>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">4</span>Ajustes finos</h2>
-        <p class="hint">Opcional — deixa o prompt mais preciso.</p>
-        <div class="row">
-          <span class="row-label">Nível</span>
-          <select id="nivel">
-            <option value="">Não especificar</option>
-            <option value="básico, explicando os conceitos do zero">Básico</option>
-            <option value="intermediário, nível de ensino médio">Intermediário</option>
-            <option value="avançado, nível de vestibular ou concurso">Avançado</option>
-          </select>
-        </div>
-        <div class="row">
-          <span class="row-label">Tamanho do conteúdo</span>
-          <select id="tamanho">
-            <option value="">Não especificar</option>
-            <option value="curto e direto, só o essencial">Curto e direto</option>
-            <option value="médio, com um bom nível de detalhe">Médio</option>
-            <option value="completo e detalhado, cobrindo o tema a fundo">Completo e detalhado</option>
-          </select>
-        </div>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">Contexto (opcional)</span>
-          <input type="text" id="contexto" placeholder="Ex: vou usar isso pra prova de bolsa dia 29">
-        </div>
-      </div>
-    </div>
-
-    <div class="mode-panel" id="modeRedacao">
-      <div class="step">
-        <h2><span class="step-num">1</span>Tema da redação</h2>
-        <p class="hint">Qualquer tema — atual, clássico, proposto pela escola ou livre.</p>
-        <div class="row">
-          <span class="row-label">Tema</span>
-          <input type="text" id="temaRedacao" placeholder="Ex: Os desafios da mobilidade urbana no Brasil">
-        </div>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">Modelo / banca</span>
-          <select id="modeloRedacao">
-            <option
-              value="dissertativo-argumentativo, seguindo a estrutura padrão (introdução, desenvolvimento e conclusão com proposta de intervenção)">
-              Dissertativo-argumentativo (padrão)</option>
-            <option
-              value="no modelo ENEM, com competências avaliadas de I a V e proposta de intervenção detalhada (agente, ação, meio, finalidade e detalhamento)">
-              ENEM</option>
-            <option
-              value="no modelo de vestibular tradicional (Fuvest/Unicamp/UERJ), com foco em argumentação e repertório sociocultural">
-              Vestibular tradicional</option>
-            <option value="no modelo de concurso público, com linguagem formal e objetiva">Concurso público</option>
-            <option value="em formato de texto livre ou criativo, sem se prender a uma estrutura rígida">Texto livre /
-              criativo</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">2</span>O que você precisa</h2>
-        <p class="hint">Marque um ou mais.</p>
-        <div class="chips" id="tiposRedacao">
-          <div class="chip"><input type="checkbox" id="r1" value="Escrever a redação completa sobre o tema"><label
-              for="r1">Redação completa</label></div>
-          <div class="chip"><input type="checkbox" id="r2"
-              value="Criar um roteiro/estrutura de tópicos para eu escrever a redação sozinho"><label
-              for="r2">Roteiro/estrutura</label></div>
-          <div class="chip"><input type="checkbox" id="r3"
-              value="Sugerir repertório sociocultural (dados, autores, citações, fatos históricos) relevante para o tema"><label
-              for="r3">Repertório sociocultural</label></div>
-          <div class="chip"><input type="checkbox" id="r4"
-              value="Criar uma tese e possíveis argumentos para defendê-la"><label for="r4">Tese e argumentos</label>
-          </div>
-          <div class="chip"><input type="checkbox" id="r5"
-              value="Sugerir uma proposta de intervenção detalhada para o problema abordado"><label for="r5">Proposta de
-              intervenção</label></div>
-          <div class="chip"><input type="checkbox" id="r6"
-              value="Revisar e corrigir a redação que eu escrevi, apontando erros e sugestões de melhoria"><label
-              for="r6">Revisar redação pronta</label></div>
-          <div class="chip"><input type="checkbox" id="r7"
-              value="Dar um feedback com nota estimada, avaliando cada competência/critério"><label for="r7">Feedback
-              com nota</label></div>
-        </div>
-        <div class="plano-extra" id="revisaoExtra">
-          <div class="row" style="margin-bottom:0;">
-            <span class="row-label">Cole sua redação aqui</span>
-            <textarea id="textoRedacao" placeholder="Cole o texto da sua redação..."
-              style="width:100%; min-height:120px; padding:11px 13px; border:2px solid var(--line); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; background:var(--field-bg); color:var(--ink); resize:vertical;"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">3</span>Ajustes finos</h2>
-        <p class="hint">Opcional — deixa o prompt mais preciso.</p>
-        <div class="row">
-          <span class="row-label">Tamanho</span>
-          <select id="tamanhoRedacao">
-            <option value="">Não especificar</option>
-            <option value="curta, entre 15 e 20 linhas">Curta (15-20 linhas)</option>
-            <option value="padrão, entre 25 e 30 linhas">Padrão (25-30 linhas)</option>
-            <option value="longa e bem desenvolvida, acima de 30 linhas">Longa (30+ linhas)</option>
-          </select>
-        </div>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">Contexto (opcional)</span>
-          <input type="text" id="contextoRedacao" placeholder="Ex: é pra prova de vestibular dia 15">
-        </div>
-      </div>
-    </div>
-
-    <div class="mode-panel" id="modePlano">
-      <div class="step">
-        <h2><span class="step-num">1</span>Matérias e temas</h2>
-        <p class="hint">Liste tudo que precisa estudar — um por linha ou separado por vírgula.</p>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">O que você precisa estudar</span>
-          <textarea id="materiasPlano"
-            placeholder="Ex: Química - Ligações químicas&#10;Matemática - Trigonometria&#10;História - Independência do Brasil"
-            style="width:100%; min-height:100px; padding:11px 13px; border:2px solid var(--line); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; background:var(--field-bg); color:var(--ink); resize:vertical;"></textarea>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">2</span>Prazo e rotina</h2>
-        <p class="hint">O cronograma é montado dia a dia, com as datas certinhas.</p>
-        <div class="row">
-          <span class="row-label">Data de início</span>
-          <input type="date" id="dataInicioPlano">
-        </div>
-        <div class="row">
-          <span class="row-label">Dias até a prova/teste</span>
-          <input type="number" id="diasProva" min="1" placeholder="Ex: 12">
-        </div>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">Horas de estudo por dia</span>
-          <input type="number" id="horasDia" min="0.5" step="0.5" placeholder="Ex: 3">
-          <p class="mini-hint">O plano distribui esse tempo dia a dia, dando mais horas pros temas pesados e menos pros
-            leves.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">3</span>Ajustes do cronograma</h2>
-        <div class="row" style="display:flex; align-items:center; gap:10px;">
-          <input type="checkbox" id="diaRevisao" checked
-            style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
-          <label for="diaRevisao" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir
-            um dia de revisão geral antes da prova</label>
-        </div>
-        <div class="row" style="margin-bottom:0; display:flex; align-items:center; gap:10px;">
-          <input type="checkbox" id="diaDescanso" checked
-            style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
-          <label for="diaDescanso" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir
-            um dia de descanso antes da prova</label>
-        </div>
-      </div>
-    </div>
-
-    <div class="mode-panel" id="modeSimulado">
-      <div class="step">
-        <h2><span class="step-num">1</span>Matéria e tema</h2>
-        <p class="hint">Pode ser uma matéria só ou várias juntas, num simulado geral.</p>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">O que o simulado vai cobrir</span>
-          <textarea id="temaSimulado"
-            placeholder="Ex: Química - Ligações químicas&#10;Matemática - Trigonometria&#10;ou apenas: Segunda Guerra Mundial"
-            style="width:100%; min-height:90px; padding:11px 13px; border:2px solid var(--line); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; background:var(--field-bg); color:var(--ink); resize:vertical;"></textarea>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">2</span>Formato das questões</h2>
-        <p class="hint">Marque um ou mais tipos.</p>
-        <div class="chips" id="tiposSimulado">
-          <div class="chip"><input type="checkbox" id="s1"
-              value="questões de múltipla escolha (5 alternativas, apenas uma correta)" checked><label for="s1">Múltipla
-              escolha</label></div>
-          <div class="chip"><input type="checkbox" id="s2"
-              value="questões discursivas/dissertativas, que exigem resposta escrita"><label for="s2">Discursiva</label>
-          </div>
-          <div class="chip"><input type="checkbox" id="s3" value="questões de verdadeiro ou falso"><label
-              for="s3">Verdadeiro ou falso</label></div>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">3</span>Configurações</h2>
-        <div class="row">
-          <span class="row-label">Número de questões</span>
-          <input type="number" id="numQuestoes" min="1" placeholder="Ex: 20">
-        </div>
-        <div class="row">
-          <span class="row-label">Nível de dificuldade</span>
-          <select id="dificuldadeSimulado">
-            <option value="">Não especificar</option>
-            <option value="fácil">Fácil</option>
-            <option value="médio">Médio</option>
-            <option value="difícil">Difícil</option>
-            <option value="misto, variando entre fácil, médio e difícil">Misto</option>
-          </select>
-        </div>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">Modelo / banca</span>
-          <select id="modeloSimulado">
-            <option value="no formato padrão de prova escolar">Prova escolar padrão</option>
-            <option value="no modelo ENEM">ENEM</option>
-            <option value="no modelo de vestibular tradicional (Fuvest/Unicamp/UERJ)">Vestibular tradicional</option>
-            <option value="no modelo de concurso público">Concurso público</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="step">
-        <h2><span class="step-num">4</span>Extras</h2>
-        <div class="row" style="display:flex; align-items:center; gap:10px;">
-          <input type="checkbox" id="gabaritoComentado" checked
-            style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
-          <label for="gabaritoComentado"
-            style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir gabarito comentado ao
-            final</label>
-        </div>
-        <div class="row" style="margin-bottom:0;">
-          <span class="row-label">Tempo sugerido pra resolver (opcional)</span>
-          <input type="text" id="tempoSimulado" placeholder="Ex: 40 minutos">
-        </div>
-      </div>
-    </div>
-
-    <div class="step" id="extrasStep">
-      <h2><span class="step-num">✧</span>Preferências extras</h2>
-      <p class="hint">Só pra redação.</p>
-      <div class="row" style="margin-bottom:14px;">
-        <span class="row-label">Série / ano escolar (opcional)</span>
-        <input type="text" id="serie" placeholder="Ex: 9º ano, 3º ano do Ensino Médio...">
-      </div>
-      <div class="chips" style="justify-content:center;">
-        <div class="chip"><input type="checkbox" id="humanizado"><label for="humanizado">💬 Usar palavras
-            simples</label></div>
-      </div>
-    </div>
-
-    <div class="output-box">
-      <h2><span class="step-num">5</span>Prompt pronto</h2>
-      <textarea id="promptText" readonly
-        placeholder="Preencha o tema e marque ao menos um tipo de material acima para gerar o prompt aqui..."></textarea>
-      <div class="actions">
-        <button class="copy" id="copyBtn">Copiar prompt</button>
-        <button class="secondary" id="chatgptBtn">Abrir no ChatGPT ↗</button>
-        <button class="secondary" id="claudeBtn">Abrir no Claude ↗</button>
-        <button class="secondary" id="geminiBtn">Abrir no Gemini ↗</button>
-        <button class="secondary" id="copilotBtn">Abrir no Copilot ↗</button>
-        <button class="secondary" id="clearBtn">Limpar tudo</button>
-        <span class="copied-msg" id="copiedMsg">Copiado!</span>
-      </div>
-    </div>
-
-    <div class="step history-step">
-      <h2><span class="step-num">✦</span>Histórico</h2>
-      <p class="hint">Seus últimos prompts gerados ficam salvos aqui.</p>
-      <div class="history-list" id="historyList"></div>
-      <p class="history-empty" id="historyEmpty">Nenhum prompt salvo ainda.</p>
-      <button class="clear-history" id="clearHistoryBtn">Limpar histórico</button>
-    </div>
-
-    <footer>Preencha o tema e marque pelo menos um tipo de material.</footer>
+  <div class="mode-switch" id="modeSwitch">
+    <button class="mode-btn active" id="modeBtnEstudos" data-mode="estudos">📚 Estudos</button>
+    <button class="mode-btn" id="modeBtnRedacao" data-mode="redacao">✍️ Redação</button>
+    <button class="mode-btn" id="modeBtnPlano" data-mode="plano">🗓️ Plano</button>
+    <button class="mode-btn" id="modeBtnSimulado" data-mode="simulado">📝 Simulado</button>
   </div>
 
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal-box">
-      <div class="modal-icon" id="modalIcon">💬</div>
-      <h3 id="modalTitle">Abrir o ChatGPT?</h3>
-      <p id="modalText">Vamos abrir o ChatGPT com o prompt pronto. Se o aplicativo estiver instalado no seu celular, ele
-        deve abrir direto; senão, abre a versão web.</p>
-      <div class="modal-actions">
-        <button class="modal-btn-no" id="modalNo">Não</button>
-        <button class="modal-btn-yes" id="modalYes">Sim, abrir</button>
-      </div>
-      <a href="#" id="modalDownload" class="modal-download" style="display:none;">Não tem o app instalado? Baixar
-        aqui</a>
+  <div class="mode-panel active" id="modeEstudos">
+  <div class="step">
+    <h2><span class="step-num">1</span>Tema e matéria</h2>
+    <p class="hint">Pode ser qualquer assunto, de qualquer matéria.</p>
+    <div class="row">
+      <span class="row-label">Matéria</span>
+      <input type="text" id="materia" placeholder="Ex: Química, História, Matemática, Inglês...">
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Tema específico</span>
+      <input type="text" id="tema" placeholder="Ex: Ligações químicas, Revolução Francesa, PG e PA...">
     </div>
   </div>
 
-  <script>
-    const materia = document.getElementById('materia');
-    const tema = document.getElementById('tema');
-    const nivel = document.getElementById('nivel');
-    const tamanho = document.getElementById('tamanho');
-    const contexto = document.getElementById('contexto');
-    const promptText = document.getElementById('promptText');
-    const tipos = document.querySelectorAll('#tipos input[type="checkbox"]');
-    const formatoInputs = document.querySelectorAll('input[name="formato"]');
+  <div class="step">
+    <h2><span class="step-num">2</span>Tipo de material</h2>
+    <p class="hint">Marque um ou mais formatos que você quer receber.</p>
+    <div class="chips" id="tipos">
+      <div class="chip"><input type="checkbox" id="t1" value="Mapa mental (em formato de tópicos e sub-tópicos indentados, mostrando as conexões entre os conceitos)"><label for="t1">Mapa mental</label></div>
+      <div class="chip"><input type="checkbox" id="t2" value="Resumo completo e organizado por sub-temas"><label for="t2">Resumo</label></div>
+      <div class="chip"><input type="checkbox" id="t3" value="Bloco de notas com os pontos-chave em frases curtas e diretas"><label for="t3">Bloco de notas</label></div>
+      <div class="chip"><input type="checkbox" id="t4" value="Flashcards no formato pergunta/resposta (pelo menos 10 cards)"><label for="t4">Flashcards</label></div>
+      <div class="chip"><input type="checkbox" id="t5" value="Lista de questões de revisão com gabarito comentado ao final"><label for="t5">Questões de revisão</label></div>
+      <div class="chip"><input type="checkbox" id="t6" value="Linha do tempo (se o tema tiver uma progressão cronológica ou de etapas)"><label for="t6">Linha do tempo</label></div>
+      <div class="chip"><input type="checkbox" id="t7" value="Quadro comparativo (tabela) entre os conceitos ou eventos principais do tema"><label for="t7">Quadro comparativo</label></div>
+      <div class="chip"><input type="checkbox" id="t8" value="Explicação didática, como se estivesse ensinando o tema do zero para alguém que nunca viu o assunto"><label for="t8">Explicação didática</label></div>
+      <div class="chip"><input type="checkbox" id="t10" value="Revisão do conteúdo que eu já estudei: destaque os pontos principais para reforçar, aponte o que costuma ser mais cobrado ou confundido, e termine com um mini teste rápido de autoavaliação (perguntas com gabarito) sobre o que foi revisado"><label for="t10">Revisão</label></div>
+    </div>
+  </div>
 
-    /* ---------- Redação: campos e lógica ---------- */
-    const temaRedacao = document.getElementById('temaRedacao');
-    const modeloRedacao = document.getElementById('modeloRedacao');
-    const tiposRedacao = document.querySelectorAll('#tiposRedacao input[type="checkbox"]');
-    const revisaoCheckbox = document.getElementById('r6');
-    const revisaoExtra = document.getElementById('revisaoExtra');
-    const textoRedacao = document.getElementById('textoRedacao');
-    const tamanhoRedacao = document.getElementById('tamanhoRedacao');
-    const contextoRedacao = document.getElementById('contextoRedacao');
-    const serie = document.getElementById('serie');
-    const humanizado = document.getElementById('humanizado');
+  <div class="step">
+    <h2><span class="step-num">3</span>Formato da entrega</h2>
+    <p class="hint">Você quer receber em texto, em imagem, ou nos dois?</p>
+    <div class="radio-group" id="formatoGroup" style="margin-left:36px;">
+      <div class="radio-chip"><input type="radio" name="formato" id="f1" value="texto" checked><label for="f1">✍️ Só texto</label></div>
+      <div class="radio-chip"><input type="radio" name="formato" id="f2" value="imagem"><label for="f2">🖼️ Só imagem</label></div>
+      <div class="radio-chip"><input type="radio" name="formato" id="f3" value="ambos"><label for="f3">✨ Texto e imagem</label></div>
+    </div>
+  </div>
 
-    function toggleRevisaoExtra() {
-      revisaoExtra.classList.toggle('show', revisaoCheckbox.checked);
+  <div class="step">
+    <h2><span class="step-num">4</span>Ajustes finos</h2>
+    <p class="hint">Opcional — deixa o material mais preciso.</p>
+    <div class="row">
+      <span class="row-label">Nível</span>
+      <select id="nivel">
+        <option value="">Não especificar</option>
+        <option value="básico, explicando os conceitos do zero">Básico</option>
+        <option value="intermediário, nível de ensino médio">Intermediário</option>
+        <option value="avançado, nível de vestibular ou concurso">Avançado</option>
+      </select>
+    </div>
+    <div class="row">
+      <span class="row-label">Tamanho do conteúdo</span>
+      <select id="tamanho">
+        <option value="">Não especificar</option>
+        <option value="curto e direto, só o essencial">Curto e direto</option>
+        <option value="médio, com um bom nível de detalhe">Médio</option>
+        <option value="completo e detalhado, cobrindo o tema a fundo">Completo e detalhado</option>
+      </select>
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Contexto (opcional)</span>
+      <input type="text" id="contexto" placeholder="Ex: vou usar isso pra prova de bolsa dia 29">
+    </div>
+  </div>
+  </div>
+
+  <div class="mode-panel" id="modeRedacao">
+  <div class="step">
+    <h2><span class="step-num">1</span>Tema da redação</h2>
+    <p class="hint">Qualquer tema — atual, clássico, proposto pela escola ou livre.</p>
+    <div class="row">
+      <span class="row-label">Tema</span>
+      <input type="text" id="temaRedacao" placeholder="Ex: Os desafios da mobilidade urbana no Brasil">
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Modelo / banca</span>
+      <select id="modeloRedacao">
+        <option value="dissertativo-argumentativo, seguindo a estrutura padrão (introdução, desenvolvimento e conclusão com proposta de intervenção)">Dissertativo-argumentativo (padrão)</option>
+        <option value="no modelo ENEM, com competências avaliadas de I a V e proposta de intervenção detalhada (agente, ação, meio, finalidade e detalhamento)">ENEM</option>
+        <option value="no modelo de vestibular tradicional (Fuvest/Unicamp/UERJ), com foco em argumentação e repertório sociocultural">Vestibular tradicional</option>
+        <option value="no modelo de concurso público, com linguagem formal e objetiva">Concurso público</option>
+        <option value="em formato de texto livre ou criativo, sem se prender a uma estrutura rígida">Texto livre / criativo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">2</span>O que você precisa</h2>
+    <p class="hint">Marque um ou mais.</p>
+    <div class="chips" id="tiposRedacao">
+      <div class="chip"><input type="checkbox" id="r1" value="Escrever a redação completa sobre o tema"><label for="r1">Redação completa</label></div>
+      <div class="chip"><input type="checkbox" id="r2" value="Criar um roteiro/estrutura de tópicos para eu escrever a redação sozinho"><label for="r2">Roteiro/estrutura</label></div>
+      <div class="chip"><input type="checkbox" id="r3" value="Sugerir repertório sociocultural (dados, autores, citações, fatos históricos) relevante para o tema"><label for="r3">Repertório sociocultural</label></div>
+      <div class="chip"><input type="checkbox" id="r4" value="Criar uma tese e possíveis argumentos para defendê-la"><label for="r4">Tese e argumentos</label></div>
+      <div class="chip"><input type="checkbox" id="r5" value="Sugerir uma proposta de intervenção detalhada para o problema abordado"><label for="r5">Proposta de intervenção</label></div>
+      <div class="chip"><input type="checkbox" id="r6" value="Revisar e corrigir a redação que eu escrevi, apontando erros e sugestões de melhoria"><label for="r6">Revisar redação pronta</label></div>
+      <div class="chip"><input type="checkbox" id="r7" value="Dar um feedback com nota estimada, avaliando cada competência/critério"><label for="r7">Feedback com nota</label></div>
+    </div>
+    <div class="plano-extra" id="revisaoExtra">
+      <div class="row" style="margin-bottom:0;">
+        <span class="row-label">Cole sua redação aqui</span>
+        <textarea id="textoRedacao" placeholder="Cole o texto da sua redação..." style="width:100%; min-height:120px; padding:11px 13px; border:2px solid var(--line); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; background:var(--field-bg); color:var(--ink); resize:vertical;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">3</span>Ajustes finos</h2>
+    <p class="hint">Opcional — deixa o material mais preciso.</p>
+    <div class="row">
+      <span class="row-label">Tamanho</span>
+      <select id="tamanhoRedacao">
+        <option value="">Não especificar</option>
+        <option value="curta, entre 15 e 20 linhas">Curta (15-20 linhas)</option>
+        <option value="padrão, entre 25 e 30 linhas">Padrão (25-30 linhas)</option>
+        <option value="longa e bem desenvolvida, acima de 30 linhas">Longa (30+ linhas)</option>
+      </select>
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Contexto (opcional)</span>
+      <input type="text" id="contextoRedacao" placeholder="Ex: é pra prova de vestibular dia 15">
+    </div>
+  </div>
+  </div>
+
+  <div class="mode-panel" id="modePlano">
+  <div class="step">
+    <h2><span class="step-num">1</span>Matérias e temas</h2>
+    <p class="hint">Liste tudo que precisa estudar — um por linha ou separado por vírgula.</p>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">O que você precisa estudar</span>
+      <textarea id="materiasPlano" placeholder="Ex: Química - Ligações químicas&#10;Matemática - Trigonometria&#10;História - Independência do Brasil" style="width:100%; min-height:100px; padding:11px 13px; border:2px solid var(--line); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; background:var(--field-bg); color:var(--ink); resize:vertical;"></textarea>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">2</span>Prazo e rotina</h2>
+    <p class="hint">O cronograma é montado dia a dia, com as datas certinhas.</p>
+    <div class="row">
+      <span class="row-label">Data de início</span>
+      <input type="date" id="dataInicioPlano">
+    </div>
+    <div class="row">
+      <span class="row-label">Dias até a prova/teste</span>
+      <input type="number" id="diasProva" min="1" placeholder="Ex: 12">
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Horas de estudo por dia</span>
+      <input type="number" id="horasDia" min="0.5" step="0.5" placeholder="Ex: 3">
+      <p class="mini-hint">O plano distribui esse tempo dia a dia, dando mais horas pros temas pesados e menos pros leves.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">3</span>Ajustes do cronograma</h2>
+    <div class="row" style="display:flex; align-items:center; gap:10px;">
+      <input type="checkbox" id="diaRevisao" checked style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
+      <label for="diaRevisao" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir um dia de revisão geral antes da prova</label>
+    </div>
+    <div class="row" style="margin-bottom:0; display:flex; align-items:center; gap:10px;">
+      <input type="checkbox" id="diaDescanso" checked style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
+      <label for="diaDescanso" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir um dia de descanso antes da prova</label>
+    </div>
+  </div>
+  </div>
+
+  <div class="mode-panel" id="modeSimulado">
+  <div class="step">
+    <h2><span class="step-num">1</span>Matéria e tema</h2>
+    <p class="hint">Pode ser uma matéria só ou várias juntas, num simulado geral.</p>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">O que o simulado vai cobrir</span>
+      <textarea id="temaSimulado" placeholder="Ex: Química - Ligações químicas&#10;Matemática - Trigonometria&#10;ou apenas: Segunda Guerra Mundial" style="width:100%; min-height:90px; padding:11px 13px; border:2px solid var(--line); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; background:var(--field-bg); color:var(--ink); resize:vertical;"></textarea>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">2</span>Formato das questões</h2>
+    <p class="hint">Marque um ou mais tipos.</p>
+    <div class="chips" id="tiposSimulado">
+      <div class="chip"><input type="checkbox" id="s1" value="questões de múltipla escolha (5 alternativas, apenas uma correta)" checked><label for="s1">Múltipla escolha</label></div>
+      <div class="chip"><input type="checkbox" id="s2" value="questões discursivas/dissertativas, que exigem resposta escrita"><label for="s2">Discursiva</label></div>
+      <div class="chip"><input type="checkbox" id="s3" value="questões de verdadeiro ou falso"><label for="s3">Verdadeiro ou falso</label></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">3</span>Configurações</h2>
+    <div class="row">
+      <span class="row-label">Número de questões</span>
+      <input type="number" id="numQuestoes" min="1" placeholder="Ex: 20">
+    </div>
+    <div class="row">
+      <span class="row-label">Nível de dificuldade</span>
+      <select id="dificuldadeSimulado">
+        <option value="">Não especificar</option>
+        <option value="fácil">Fácil</option>
+        <option value="médio">Médio</option>
+        <option value="difícil">Difícil</option>
+        <option value="misto, variando entre fácil, médio e difícil">Misto</option>
+      </select>
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Modelo / banca</span>
+      <select id="modeloSimulado">
+        <option value="no formato padrão de prova escolar">Prova escolar padrão</option>
+        <option value="no modelo ENEM">ENEM</option>
+        <option value="no modelo de vestibular tradicional (Fuvest/Unicamp/UERJ)">Vestibular tradicional</option>
+        <option value="no modelo de concurso público">Concurso público</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">4</span>Extras</h2>
+    <div class="row" style="display:flex; align-items:center; gap:10px;">
+      <input type="checkbox" id="gabaritoComentado" checked style="width:18px; height:18px; accent-color: var(--violet); margin:0; flex-shrink:0;">
+      <label for="gabaritoComentado" style="font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;">Incluir gabarito comentado ao final</label>
+    </div>
+    <div class="row" style="margin-bottom:0;">
+      <span class="row-label">Tempo sugerido pra resolver (opcional)</span>
+      <input type="text" id="tempoSimulado" placeholder="Ex: 40 minutos">
+    </div>
+  </div>
+  </div>
+
+  <div class="step" id="extrasStep">
+    <h2><span class="step-num">✧</span>Preferências extras</h2>
+    <p class="hint">Só pra redação.</p>
+    <div class="row" style="margin-bottom:14px;">
+      <span class="row-label">Série / ano escolar (opcional)</span>
+      <input type="text" id="serie" placeholder="Ex: 9º ano, 3º ano do Ensino Médio...">
+    </div>
+    <div class="chips" style="justify-content:center;">
+      <div class="chip"><input type="checkbox" id="humanizado"><label for="humanizado">💬 Usar palavras simples</label></div>
+    </div>
+  </div>
+
+  <div class="output-box">
+    <h2><span class="step-num">5</span>Seu material de estudo</h2>
+    <textarea id="promptText" readonly placeholder="Preencha o tema e marque ao menos um tipo de material acima para gerar seu material de estudo aqui..."></textarea>
+    <div class="actions">
+      <button class="copy" id="copyBtn">Copiar</button>
+      <button class="secondary" id="chatgptBtn">Abrir no ChatGPT ↗</button>
+      <button class="secondary" id="claudeBtn">Abrir no Claude ↗</button>
+      <button class="secondary" id="geminiBtn">Abrir no Gemini ↗</button>
+      <button class="secondary" id="copilotBtn">Abrir no Copilot ↗</button>
+      <button class="secondary" id="clearBtn">Limpar tudo</button>
+      <span class="copied-msg" id="copiedMsg">Copiado!</span>
+    </div>
+  </div>
+
+  <div class="step history-step">
+    <h2><span class="step-num">✦</span>Histórico</h2>
+    <p class="hint">Seus últimos materiais gerados ficam salvos aqui.</p>
+    <div class="history-list" id="historyList"></div>
+    <p class="history-empty" id="historyEmpty">Nenhum material salvo ainda.</p>
+    <button class="clear-history" id="clearHistoryBtn">Limpar histórico</button>
+  </div>
+
+  <footer>Preencha o tema e marque pelo menos um tipo de material.</footer>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-icon" id="modalIcon">💬</div>
+    <h3 id="modalTitle">Abrir o ChatGPT?</h3>
+    <p id="modalText">Vamos abrir o ChatGPT já com o comando pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web.</p>
+    <div class="modal-actions">
+      <button class="modal-btn-no" id="modalNo">Não</button>
+      <button class="modal-btn-yes" id="modalYes">Sim, abrir</button>
+    </div>
+    <a href="#" id="modalDownload" class="modal-download" style="display:none;">Não tem o app instalado? Baixar aqui</a>
+  </div>
+</div>
+
+<script>
+const materia = document.getElementById('materia');
+const tema = document.getElementById('tema');
+const nivel = document.getElementById('nivel');
+const tamanho = document.getElementById('tamanho');
+const contexto = document.getElementById('contexto');
+const promptText = document.getElementById('promptText');
+const tipos = document.querySelectorAll('#tipos input[type="checkbox"]');
+const formatoInputs = document.querySelectorAll('input[name="formato"]');
+
+/* ---------- Redação: campos e lógica ---------- */
+const temaRedacao = document.getElementById('temaRedacao');
+const modeloRedacao = document.getElementById('modeloRedacao');
+const tiposRedacao = document.querySelectorAll('#tiposRedacao input[type="checkbox"]');
+const revisaoCheckbox = document.getElementById('r6');
+const revisaoExtra = document.getElementById('revisaoExtra');
+const textoRedacao = document.getElementById('textoRedacao');
+const tamanhoRedacao = document.getElementById('tamanhoRedacao');
+const contextoRedacao = document.getElementById('contextoRedacao');
+const serie = document.getElementById('serie');
+const humanizado = document.getElementById('humanizado');
+
+function toggleRevisaoExtra(){
+  revisaoExtra.classList.toggle('show', revisaoCheckbox.checked);
+}
+revisaoCheckbox.addEventListener('change', () => { toggleRevisaoExtra(); build(); });
+toggleRevisaoExtra();
+
+/* ---------- Plano de estudos: campos e lógica ---------- */
+const materiasPlano = document.getElementById('materiasPlano');
+const dataInicioPlano = document.getElementById('dataInicioPlano');
+const diasProva = document.getElementById('diasProva');
+const horasDia = document.getElementById('horasDia');
+const diaRevisao = document.getElementById('diaRevisao');
+const diaDescanso = document.getElementById('diaDescanso');
+
+/* Data de início padrão: hoje */
+(function setDefaultStartDate(){
+  const hoje = new Date();
+  const yyyy = hoje.getFullYear();
+  const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+  const dd = String(hoje.getDate()).padStart(2, '0');
+  dataInicioPlano.value = `${yyyy}-${mm}-${dd}`;
+})();
+
+/* ---------- Simulado: campos e lógica ---------- */
+const temaSimulado = document.getElementById('temaSimulado');
+const tiposSimulado = document.querySelectorAll('#tiposSimulado input[type="checkbox"]');
+const numQuestoes = document.getElementById('numQuestoes');
+const dificuldadeSimulado = document.getElementById('dificuldadeSimulado');
+const modeloSimulado = document.getElementById('modeloSimulado');
+const gabaritoComentado = document.getElementById('gabaritoComentado');
+const tempoSimulado = document.getElementById('tempoSimulado');
+
+/* ---------- Alternador de modo ---------- */
+let currentMode = 'estudos';
+const modeBtnEstudos = document.getElementById('modeBtnEstudos');
+const modeBtnRedacao = document.getElementById('modeBtnRedacao');
+const modeBtnPlano = document.getElementById('modeBtnPlano');
+const modeBtnSimulado = document.getElementById('modeBtnSimulado');
+const modeEstudos = document.getElementById('modeEstudos');
+const modeRedacao = document.getElementById('modeRedacao');
+const modePlano = document.getElementById('modePlano');
+const modeSimulado = document.getElementById('modeSimulado');
+
+function setMode(mode){
+  currentMode = mode;
+  modeBtnEstudos.classList.toggle('active', mode === 'estudos');
+  modeBtnRedacao.classList.toggle('active', mode === 'redacao');
+  modeBtnPlano.classList.toggle('active', mode === 'plano');
+  modeBtnSimulado.classList.toggle('active', mode === 'simulado');
+  modeEstudos.classList.toggle('active', mode === 'estudos');
+  modeRedacao.classList.toggle('active', mode === 'redacao');
+  modePlano.classList.toggle('active', mode === 'plano');
+  modeSimulado.classList.toggle('active', mode === 'simulado');
+  document.getElementById('extrasStep').style.display = (mode === 'redacao') ? 'block' : 'none';
+  build();
+}
+modeBtnEstudos.addEventListener('click', () => setMode('estudos'));
+modeBtnRedacao.addEventListener('click', () => setMode('redacao'));
+modeBtnPlano.addEventListener('click', () => setMode('plano'));
+modeBtnSimulado.addEventListener('click', () => setMode('simulado'));
+
+function build(){
+  if(currentMode === 'redacao'){ buildRedacao(); return; }
+  if(currentMode === 'plano'){ buildPlano(); return; }
+  if(currentMode === 'simulado'){ buildSimulado(); return; }
+  buildEstudos();
+}
+
+function buildSimulado(){
+  const t = temaSimulado.value.trim();
+  const selected = Array.from(tiposSimulado).filter(c => c.checked).map(c => c.value);
+
+  if(!t){
+    promptText.value = '';
+    return;
+  }
+
+  const qtd = numQuestoes.value ? numQuestoes.value : '10';
+  let p = `Quero que você monte um simulado com ${qtd} questões, ${modeloSimulado.value}, sobre:\n${t}\n\n`;
+
+  if(selected.length > 0){
+    p += `As questões devem ser: ${selected.join('; ')}.\n`;
+  } else {
+    p += `Pode variar o formato das questões como achar melhor.\n`;
+  }
+
+  if(dificuldadeSimulado.value) p += `Nível de dificuldade: ${dificuldadeSimulado.value}.\n`;
+  if(tempoSimulado.value.trim()) p += `Tempo sugerido para resolver: ${tempoSimulado.value.trim()}.\n`;
+
+  p += `Numere as questões e apresente todas primeiro, sem o gabarito no meio.\n`;
+
+  if(gabaritoComentado.checked){
+    p += `Ao final, apresente o gabarito completo com uma breve explicação de cada resposta correta.\n`;
+  } else {
+    p += `Não inclua o gabarito, só as questões.\n`;
+  }
+
+  promptText.value = p;
+}
+
+function formatDataBR(date){
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  return `${dd}/${mm}`;
+}
+
+function buildPlano(){
+  const materiasRaw = materiasPlano.value.trim();
+  const dias = parseInt(diasProva.value, 10);
+  const horas = horasDia.value;
+
+  if(!materiasRaw && !dias){
+    promptText.value = '';
+    return;
+  }
+
+  let p = `Quero que você monte um cronograma de estudos dia a dia para mim.\n\n`;
+
+  if(materiasRaw){
+    const lista = materiasRaw.split('\n').map(s => s.trim()).filter(Boolean);
+    p += `Preciso estudar o seguinte:\n`;
+    lista.forEach((item, i) => { p += `${i+1}. ${item}\n`; });
+    p += `\n`;
+  }
+
+  if(dias && dataInicioPlano.value){
+    const inicio = new Date(dataInicioPlano.value + 'T00:00:00');
+    const dayLabels = [];
+    for(let i = 0; i < dias; i++){
+      const d = new Date(inicio);
+      d.setDate(inicio.getDate() + i);
+      dayLabels.push(`Dia ${i+1} (${formatDataBR(d)})`);
     }
-    revisaoCheckbox.addEventListener('change', () => { toggleRevisaoExtra(); build(); });
-    toggleRevisaoExtra();
+    p += `Monte o cronograma exatamente com estes dias e datas, um por vez, cada um com um título no formato "${dayLabels[0]}":\n`;
+    dayLabels.forEach(l => { p += `- ${l}\n`; });
+    p += `\nPara cada dia, diga claramente o que estudar e, se fizer sentido, quanto tempo dedicar a cada assunto naquele dia.\n`;
+  } else if(dias){
+    p += `Monte o cronograma dividido em ${dias} dias (Dia 1, Dia 2, Dia 3...), dizendo o que estudar em cada um.\n`;
+  }
 
-    /* ---------- Plano de estudos: campos e lógica ---------- */
-    const materiasPlano = document.getElementById('materiasPlano');
-    const dataInicioPlano = document.getElementById('dataInicioPlano');
-    const diasProva = document.getElementById('diasProva');
-    const horasDia = document.getElementById('horasDia');
-    const diaRevisao = document.getElementById('diaRevisao');
-    const diaDescanso = document.getElementById('diaDescanso');
+  if(horas) p += `Tenho ${horas} horas por dia disponíveis para estudar.\n`;
 
-    /* Data de início padrão: hoje */
-    (function setDefaultStartDate() {
-      const hoje = new Date();
-      const yyyy = hoje.getFullYear();
-      const mm = String(hoje.getMonth() + 1).padStart(2, '0');
-      const dd = String(hoje.getDate()).padStart(2, '0');
-      dataInicioPlano.value = `${yyyy}-${mm}-${dd}`;
-    })();
+  p += `Distribua o conteúdo de forma proporcional ao peso de cada tema: assuntos mais extensos, difíceis ou com mais questões devem receber mais tempo e/ou mais dias; assuntos mais curtos ou simples devem receber menos tempo.\n`;
 
-    /* ---------- Simulado: campos e lógica ---------- */
-    const temaSimulado = document.getElementById('temaSimulado');
-    const tiposSimulado = document.querySelectorAll('#tiposSimulado input[type="checkbox"]');
-    const numQuestoes = document.getElementById('numQuestoes');
-    const dificuldadeSimulado = document.getElementById('dificuldadeSimulado');
-    const modeloSimulado = document.getElementById('modeloSimulado');
-    const gabaritoComentado = document.getElementById('gabaritoComentado');
-    const tempoSimulado = document.getElementById('tempoSimulado');
+  if(diaRevisao.checked) p += `Inclua um dia de revisão geral de tudo, próximo ao final do cronograma, antes da prova.\n`;
+  if(diaDescanso.checked) p += `Inclua um dia de descanso, sem estudar nada, no dia anterior à prova.\n`;
 
-    /* ---------- Alternador de modo ---------- */
-    let currentMode = 'estudos';
-    const modeBtnEstudos = document.getElementById('modeBtnEstudos');
-    const modeBtnRedacao = document.getElementById('modeBtnRedacao');
-    const modeBtnPlano = document.getElementById('modeBtnPlano');
-    const modeBtnSimulado = document.getElementById('modeBtnSimulado');
-    const modeEstudos = document.getElementById('modeEstudos');
-    const modeRedacao = document.getElementById('modeRedacao');
-    const modePlano = document.getElementById('modePlano');
-    const modeSimulado = document.getElementById('modeSimulado');
+  p += `Para cada dia (ou pelo menos para cada assunto diferente), especifique também:\n`;
+  p += `- O QUE estudar (o tópico ou subtema exato daquele momento);\n`;
+  p += `- COMO estudar (a técnica mais indicada para aquele conteúdo: leitura, resumo, exercícios, flashcards, mapa mental, vídeo-aula, revisão espaçada etc., de acordo com o que funciona melhor pra cada tipo de assunto);\n`;
+  p += `- ONDE estudar (sugestões de fontes ou materiais: livro didático, sites, canais do YouTube, apostilas, questões de provas anteriores, aplicativos etc., quando fizer sentido).\n`;
 
-    function setMode(mode) {
-      currentMode = mode;
-      modeBtnEstudos.classList.toggle('active', mode === 'estudos');
-      modeBtnRedacao.classList.toggle('active', mode === 'redacao');
-      modeBtnPlano.classList.toggle('active', mode === 'plano');
-      modeBtnSimulado.classList.toggle('active', mode === 'simulado');
-      modeEstudos.classList.toggle('active', mode === 'estudos');
-      modeRedacao.classList.toggle('active', mode === 'redacao');
-      modePlano.classList.toggle('active', mode === 'plano');
-      modeSimulado.classList.toggle('active', mode === 'simulado');
-      document.getElementById('extrasStep').style.display = (mode === 'redacao') ? 'block' : 'none';
-      build();
-    }
-    modeBtnEstudos.addEventListener('click', () => setMode('estudos'));
-    modeBtnRedacao.addEventListener('click', () => setMode('redacao'));
-    modeBtnPlano.addEventListener('click', () => setMode('plano'));
-    modeBtnSimulado.addEventListener('click', () => setMode('simulado'));
+  p += `\nApresente o cronograma completo dia por dia, na ordem, sem resumir ou pular nenhum dia.`;
 
-    function build() {
-      if (currentMode === 'redacao') { buildRedacao(); return; }
-      if (currentMode === 'plano') { buildPlano(); return; }
-      if (currentMode === 'simulado') { buildSimulado(); return; }
-      buildEstudos();
-    }
+  promptText.value = p;
+}
 
-    function buildSimulado() {
-      const t = temaSimulado.value.trim();
-      const selected = Array.from(tiposSimulado).filter(c => c.checked).map(c => c.value);
+function buildRedacao(){
+  const t = temaRedacao.value.trim();
+  const selected = Array.from(tiposRedacao).filter(c => c.checked).map(c => c.value);
 
-      if (!t) {
-        promptText.value = '';
-        return;
-      }
+  if(!t && selected.length === 0){
+    promptText.value = '';
+    return;
+  }
 
-      const qtd = numQuestoes.value ? numQuestoes.value : '10';
-      let p = `Quero que você monte um simulado com ${qtd} questões, ${modeloSimulado.value}, sobre:\n${t}\n\n`;
+  let temaDesc = t ? t : 'o tema que eu vou passar';
+  let p = `Quero que você me ajude com uma redação sobre "${temaDesc}", ${modeloRedacao.value}.\n\n`;
 
-      if (selected.length > 0) {
-        p += `As questões devem ser: ${selected.join('; ')}.\n`;
-      } else {
-        p += `Pode variar o formato das questões como achar melhor.\n`;
-      }
+  if(selected.length > 0){
+    p += `Preciso do seguinte, na ordem abaixo, com títulos separando cada parte:\n`;
+    selected.forEach((s, i) => { p += `${i+1}. ${s}\n`; });
+    p += `\n`;
+  } else {
+    p += `Me ajude de forma completa com essa redação.\n\n`;
+  }
 
-      if (dificuldadeSimulado.value) p += `Nível de dificuldade: ${dificuldadeSimulado.value}.\n`;
-      if (tempoSimulado.value.trim()) p += `Tempo sugerido para resolver: ${tempoSimulado.value.trim()}.\n`;
+  if(revisaoCheckbox.checked && textoRedacao.value.trim()){
+    p += `Aqui está o texto da minha redação para revisão:\n"""\n${textoRedacao.value.trim()}\n"""\n\n`;
+  }
 
-      p += `Numere as questões e apresente todas primeiro, sem o gabarito no meio.\n`;
+  if(tamanhoRedacao.value) p += `Tamanho: ${tamanhoRedacao.value}.\n`;
+  if(contextoRedacao.value.trim()) p += `Contexto adicional: ${contextoRedacao.value.trim()}.\n`;
+  if(serie.value.trim()) p += `Minha série/ano escolar: ${serie.value.trim()}.\n`;
+  if(humanizado.checked) p += `Escreva de forma humanizada e simples, com linguagem natural, fácil de entender, sem parecer um texto robótico ou genérico.\n`;
 
-      if (gabaritoComentado.checked) {
-        p += `Ao final, apresente o gabarito completo com uma breve explicação de cada resposta correta.\n`;
-      } else {
-        p += `Não inclua o gabarito, só as questões.\n`;
-      }
+  p += `\nUse linguagem clara, bem estruturada e adequada à norma culta.`;
 
-      promptText.value = p;
-    }
+  promptText.value = p;
+}
 
-    function formatDataBR(date) {
-      const dd = String(date.getDate()).padStart(2, '0');
-      const mm = String(date.getMonth() + 1).padStart(2, '0');
-      return `${dd}/${mm}`;
-    }
+function buildEstudos(){
+  const t = tema.value.trim();
+  const m = materia.value.trim();
+  const selected = Array.from(tipos).filter(c => c.checked).map(c => c.value);
+  const formato = Array.from(formatoInputs).find(r => r.checked).value;
 
-    function buildPlano() {
-      const materiasRaw = materiasPlano.value.trim();
-      const dias = parseInt(diasProva.value, 10);
-      const horas = horasDia.value;
+  if(!t && !m && selected.length === 0){
+    promptText.value = '';
+    return;
+  }
 
-      if (!materiasRaw && !dias) {
-        promptText.value = '';
-        return;
-      }
+  let temaDesc = t ? t : 'o tema que eu vou passar';
+  if(m) temaDesc += ` (matéria: ${m})`;
 
-      let p = `Quero que você monte um cronograma de estudos dia a dia para mim.\n\n`;
+  let p = `Quero que você me ajude a estudar sobre ${temaDesc}.\n\n`;
 
-      if (materiasRaw) {
-        const lista = materiasRaw.split('\n').map(s => s.trim()).filter(Boolean);
-        p += `Preciso estudar o seguinte:\n`;
-        lista.forEach((item, i) => { p += `${i + 1}. ${item}\n`; });
-        p += `\n`;
-      }
+  if(selected.length > 0){
+    p += `Monte o seguinte material de estudo, na ordem abaixo, com títulos separando cada parte:\n`;
+    selected.forEach((s, i) => { p += `${i+1}. ${s}\n`; });
+    p += `\n`;
+  } else {
+    p += `Monte um material de estudo completo sobre o tema.\n\n`;
+  }
 
-      if (dias && dataInicioPlano.value) {
-        const inicio = new Date(dataInicioPlano.value + 'T00:00:00');
-        const dayLabels = [];
-        for (let i = 0; i < dias; i++) {
-          const d = new Date(inicio);
-          d.setDate(inicio.getDate() + i);
-          dayLabels.push(`Dia ${i + 1} (${formatDataBR(d)})`);
-        }
-        p += `Monte o cronograma exatamente com estes dias e datas, um por vez, cada um com um título no formato "${dayLabels[0]}":\n`;
-        dayLabels.forEach(l => { p += `- ${l}\n`; });
-        p += `\nPara cada dia, diga claramente o que estudar e, se fizer sentido, quanto tempo dedicar a cada assunto naquele dia.\n`;
-      } else if (dias) {
-        p += `Monte o cronograma dividido em ${dias} dias (Dia 1, Dia 2, Dia 3...), dizendo o que estudar em cada um.\n`;
-      }
+  if(formato === 'imagem'){
+    p += `Entregue o conteúdo em formato de IMAGEM (crie uma imagem/infográfico visual com o conteúdo organizado), sem me mandar como texto corrido.\n`;
+  } else if(formato === 'ambos'){
+    p += `Entregue o conteúdo tanto em TEXTO (organizado com títulos e tópicos) quanto em uma IMAGEM/infográfico visual representando o mesmo conteúdo.\n`;
+  } else {
+    p += `Entregue o conteúdo em formato de TEXTO, organizado com títulos e tópicos.\n`;
+  }
 
-      if (horas) p += `Tenho ${horas} horas por dia disponíveis para estudar.\n`;
+  if(nivel.value) p += `Nível: ${nivel.value}.\n`;
+  if(tamanho.value) p += `Tamanho/profundidade do conteúdo: ${tamanho.value}.\n`;
+  if(contexto.value.trim()) p += `Contexto adicional: ${contexto.value.trim()}.\n`;
 
-      p += `Distribua o conteúdo de forma proporcional ao peso de cada tema: assuntos mais extensos, difíceis ou com mais questões devem receber mais tempo e/ou mais dias; assuntos mais curtos ou simples devem receber menos tempo.\n`;
+  p += `\nUse linguagem clara e organize bem com títulos, listas ou tabelas quando fizer sentido.`;
 
-      if (diaRevisao.checked) p += `Inclua um dia de revisão geral de tudo, próximo ao final do cronograma, antes da prova.\n`;
-      if (diaDescanso.checked) p += `Inclua um dia de descanso, sem estudar nada, no dia anterior à prova.\n`;
+  promptText.value = p;
+}
 
-      p += `Para cada dia (ou pelo menos para cada assunto diferente), especifique também:\n`;
-      p += `- O QUE estudar (o tópico ou subtema exato daquele momento);\n`;
-      p += `- COMO estudar (a técnica mais indicada para aquele conteúdo: leitura, resumo, exercícios, flashcards, mapa mental, vídeo-aula, revisão espaçada etc., de acordo com o que funciona melhor pra cada tipo de assunto);\n`;
-      p += `- ONDE estudar (sugestões de fontes ou materiais: livro didático, sites, canais do YouTube, apostilas, questões de provas anteriores, aplicativos etc., quando fizer sentido).\n`;
+[materia, tema, nivel, tamanho, contexto].forEach(el => el.addEventListener('input', build));
+tipos.forEach(c => c.addEventListener('change', build));
+formatoInputs.forEach(r => r.addEventListener('change', build));
 
-      p += `\nApresente o cronograma completo dia por dia, na ordem, sem resumir ou pular nenhum dia.`;
+[temaRedacao, modeloRedacao, textoRedacao, tamanhoRedacao, contextoRedacao].forEach(el => el.addEventListener('input', build));
+modeloRedacao.addEventListener('change', build);
+tamanhoRedacao.addEventListener('change', build);
+tiposRedacao.forEach(c => c.addEventListener('change', build));
 
-      promptText.value = p;
-    }
+[materiasPlano, dataInicioPlano, diasProva, horasDia].forEach(el => el.addEventListener('input', build));
+dataInicioPlano.addEventListener('change', build);
+diaRevisao.addEventListener('change', build);
+diaDescanso.addEventListener('change', build);
 
-    function buildRedacao() {
-      const t = temaRedacao.value.trim();
-      const selected = Array.from(tiposRedacao).filter(c => c.checked).map(c => c.value);
+[temaSimulado, numQuestoes, tempoSimulado].forEach(el => el.addEventListener('input', build));
+dificuldadeSimulado.addEventListener('change', build);
+modeloSimulado.addEventListener('change', build);
+gabaritoComentado.addEventListener('change', build);
+tiposSimulado.forEach(c => c.addEventListener('change', build));
 
-      if (!t && selected.length === 0) {
-        promptText.value = '';
-        return;
-      }
+serie.addEventListener('input', build);
+humanizado.addEventListener('change', build);
 
-      let temaDesc = t ? t : 'o tema que eu vou passar';
-      let p = `Quero que você me ajude com uma redação sobre "${temaDesc}", ${modeloRedacao.value}.\n\n`;
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  if(!promptText.value.trim()) return;
+  try{
+    await navigator.clipboard.writeText(promptText.value);
+  }catch(e){
+    promptText.select();
+    document.execCommand('copy');
+  }
+  const msg = document.getElementById('copiedMsg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 1600);
+  saveToHistory(promptText.value);
+});
 
-      if (selected.length > 0) {
-        p += `Preciso do seguinte, na ordem abaixo, com títulos separando cada parte:\n`;
-        selected.forEach((s, i) => { p += `${i + 1}. ${s}\n`; });
-        p += `\n`;
-      } else {
-        p += `Me ajude de forma completa com essa redação.\n\n`;
-      }
+/* ---------- Detecção de sistema e lojas de app ---------- */
+function getPlatform(){
+  const ua = navigator.userAgent || '';
+  if(/iPhone|iPad|iPod/i.test(ua)) return 'ios';
+  if(/Android/i.test(ua)) return 'android';
+  return 'desktop';
+}
 
-      if (revisaoCheckbox.checked && textoRedacao.value.trim()) {
-        p += `Aqui está o texto da minha redação para revisão:\n"""\n${textoRedacao.value.trim()}\n"""\n\n`;
-      }
+const STORE_LINKS = {
+  chatgpt: {
+    ios: 'https://apps.apple.com/app/chatgpt/id6448311069',
+    android: 'https://play.google.com/store/apps/details?id=com.openai.chatgpt'
+  },
+  claude: {
+    ios: 'https://apps.apple.com/app/claude/id6473753684',
+    android: 'https://play.google.com/store/apps/details?id=com.anthropic.claude'
+  },
+  gemini: {
+    ios: 'https://apps.apple.com/app/google-gemini/id6477489729',
+    android: 'https://play.google.com/store/apps/details?id=com.google.android.apps.bard'
+  },
+  copilot: {
+    ios: 'https://apps.apple.com/app/microsoft-copilot/id6472538445',
+    android: 'https://play.google.com/store/apps/details?id=com.microsoft.copilot'
+  }
+};
 
-      if (tamanhoRedacao.value) p += `Tamanho: ${tamanhoRedacao.value}.\n`;
-      if (contextoRedacao.value.trim()) p += `Contexto adicional: ${contextoRedacao.value.trim()}.\n`;
-      if (serie.value.trim()) p += `Minha série/ano escolar: ${serie.value.trim()}.\n`;
-      if (humanizado.checked) p += `Escreva de forma humanizada e simples, com linguagem natural, fácil de entender, sem parecer um texto robótico ou genérico.\n`;
+/* Abre o link universal numa aba nova (mais confiável do que trocar a página
+   atual, especialmente dentro de pré-visualizações/iframes). No celular, se o
+   app estiver instalado, o próprio sistema intercepta e abre o aplicativo;
+   se não estiver, abre a versão web no navegador. */
+function tryOpenApp(appName, appUrl){
+  window.open(appUrl, '_blank', 'noopener');
+}
 
-      p += `\nUse linguagem clara, bem estruturada e adequada à norma culta.`;
+function getDownloadLink(appName){
+  const platform = getPlatform();
+  if(platform === 'ios' || platform === 'android') return STORE_LINKS[appName][platform];
+  return null;
+}
 
-      promptText.value = p;
-    }
+/* ---------- Modal de confirmação ---------- */
+const modalOverlay = document.getElementById('modalOverlay');
+const modalIcon = document.getElementById('modalIcon');
+const modalTitle = document.getElementById('modalTitle');
+const modalText = document.getElementById('modalText');
+const modalYes = document.getElementById('modalYes');
+const modalNo = document.getElementById('modalNo');
+let pendingAction = null;
 
-    function buildEstudos() {
-      const t = tema.value.trim();
-      const m = materia.value.trim();
-      const selected = Array.from(tipos).filter(c => c.checked).map(c => c.value);
-      const formato = Array.from(formatoInputs).find(r => r.checked).value;
+const modalDownload = document.getElementById('modalDownload');
 
-      if (!t && !m && selected.length === 0) {
-        promptText.value = '';
-        return;
-      }
+function openConfirmModal({ icon, title, text, onConfirm, downloadLink }){
+  modalIcon.textContent = icon;
+  modalTitle.textContent = title;
+  modalText.textContent = text;
+  pendingAction = onConfirm;
+  if(downloadLink){
+    modalDownload.href = downloadLink;
+    modalDownload.style.display = 'block';
+  } else {
+    modalDownload.style.display = 'none';
+  }
+  modalOverlay.classList.add('show');
+}
+function closeConfirmModal(){
+  modalOverlay.classList.remove('show');
+  pendingAction = null;
+}
+modalNo.addEventListener('click', closeConfirmModal);
+modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) closeConfirmModal(); });
+modalYes.addEventListener('click', () => {
+  if(pendingAction) pendingAction();
+  closeConfirmModal();
+});
 
-      let temaDesc = t ? t : 'o tema que eu vou passar';
-      if (m) temaDesc += ` (matéria: ${m})`;
-
-      let p = `Quero que você me ajude a estudar sobre ${temaDesc}.\n\n`;
-
-      if (selected.length > 0) {
-        p += `Monte o seguinte material de estudo, na ordem abaixo, com títulos separando cada parte:\n`;
-        selected.forEach((s, i) => { p += `${i + 1}. ${s}\n`; });
-        p += `\n`;
-      } else {
-        p += `Monte um material de estudo completo sobre o tema.\n\n`;
-      }
-
-      if (formato === 'imagem') {
-        p += `Entregue o conteúdo em formato de IMAGEM (crie uma imagem/infográfico visual com o conteúdo organizado), sem me mandar como texto corrido.\n`;
-      } else if (formato === 'ambos') {
-        p += `Entregue o conteúdo tanto em TEXTO (organizado com títulos e tópicos) quanto em uma IMAGEM/infográfico visual representando o mesmo conteúdo.\n`;
-      } else {
-        p += `Entregue o conteúdo em formato de TEXTO, organizado com títulos e tópicos.\n`;
-      }
-
-      if (nivel.value) p += `Nível: ${nivel.value}.\n`;
-      if (tamanho.value) p += `Tamanho/profundidade do conteúdo: ${tamanho.value}.\n`;
-      if (contexto.value.trim()) p += `Contexto adicional: ${contexto.value.trim()}.\n`;
-
-      p += `\nUse linguagem clara e organize bem com títulos, listas ou tabelas quando fizer sentido.`;
-
-      promptText.value = p;
-    }
-
-    [materia, tema, nivel, tamanho, contexto].forEach(el => el.addEventListener('input', build));
-    tipos.forEach(c => c.addEventListener('change', build));
-    formatoInputs.forEach(r => r.addEventListener('change', build));
-
-    [temaRedacao, modeloRedacao, textoRedacao, tamanhoRedacao, contextoRedacao].forEach(el => el.addEventListener('input', build));
-    modeloRedacao.addEventListener('change', build);
-    tamanhoRedacao.addEventListener('change', build);
-    tiposRedacao.forEach(c => c.addEventListener('change', build));
-
-    [materiasPlano, dataInicioPlano, diasProva, horasDia].forEach(el => el.addEventListener('input', build));
-    dataInicioPlano.addEventListener('change', build);
-    diaRevisao.addEventListener('change', build);
-    diaDescanso.addEventListener('change', build);
-
-    [temaSimulado, numQuestoes, tempoSimulado].forEach(el => el.addEventListener('input', build));
-    dificuldadeSimulado.addEventListener('change', build);
-    modeloSimulado.addEventListener('change', build);
-    gabaritoComentado.addEventListener('change', build);
-    tiposSimulado.forEach(c => c.addEventListener('change', build));
-
-    serie.addEventListener('input', build);
-    humanizado.addEventListener('change', build);
-
-    document.getElementById('copyBtn').addEventListener('click', async () => {
-      if (!promptText.value.trim()) return;
-      try {
-        await navigator.clipboard.writeText(promptText.value);
-      } catch (e) {
-        promptText.select();
-        document.execCommand('copy');
-      }
-      const msg = document.getElementById('copiedMsg');
-      msg.classList.add('show');
-      setTimeout(() => msg.classList.remove('show'), 1600);
+document.getElementById('chatgptBtn').addEventListener('click', () => {
+  if(!promptText.value.trim()) return;
+  openConfirmModal({
+    icon: '💬',
+    title: 'Abrir o ChatGPT?',
+    text: 'Vamos abrir o ChatGPT já com o comando pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web.',
+    downloadLink: getDownloadLink('chatgpt'),
+    onConfirm: () => {
+      tryOpenApp('chatgpt', 'https://chatgpt.com/?q=' + encodeURIComponent(promptText.value));
       saveToHistory(promptText.value);
+    }
+  });
+});
+
+document.getElementById('claudeBtn').addEventListener('click', () => {
+  if(!promptText.value.trim()) return;
+  openConfirmModal({
+    icon: '✦',
+    title: 'Abrir o Claude?',
+    text: 'Vamos abrir o Claude já com o comando pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web.',
+    downloadLink: getDownloadLink('claude'),
+    onConfirm: () => {
+      tryOpenApp('claude', 'https://claude.ai/new?q=' + encodeURIComponent(promptText.value));
+      saveToHistory(promptText.value);
+    }
+  });
+});
+
+document.getElementById('geminiBtn').addEventListener('click', () => {
+  if(!promptText.value.trim()) return;
+  openConfirmModal({
+    icon: '✨',
+    title: 'Abrir o Gemini?',
+    text: 'Vamos abrir o Gemini já com o comando pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web. Se o texto não vier preenchido automaticamente, é só colar (já está copiado).',
+    downloadLink: getDownloadLink('gemini'),
+    onConfirm: () => {
+      tryOpenApp('gemini', 'https://gemini.google.com/app?q=' + encodeURIComponent(promptText.value));
+      saveToHistory(promptText.value);
+    }
+  });
+});
+
+document.getElementById('copilotBtn').addEventListener('click', () => {
+  if(!promptText.value.trim()) return;
+  openConfirmModal({
+    icon: '🧭',
+    title: 'Abrir o Copilot?',
+    text: 'Vamos abrir o Copilot já com o comando pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web. Se o texto não vier preenchido automaticamente, é só colar (já está copiado).',
+    downloadLink: getDownloadLink('copilot'),
+    onConfirm: () => {
+      tryOpenApp('copilot', 'https://copilot.microsoft.com/?q=' + encodeURIComponent(promptText.value));
+      saveToHistory(promptText.value);
+    }
+  });
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  materia.value = '';
+  tema.value = '';
+  nivel.value = '';
+  tamanho.value = '';
+  contexto.value = '';
+  tipos.forEach(c => c.checked = false);
+  document.getElementById('f1').checked = true;
+
+  temaRedacao.value = '';
+  modeloRedacao.selectedIndex = 0;
+  tiposRedacao.forEach(c => c.checked = false);
+  textoRedacao.value = '';
+  tamanhoRedacao.value = '';
+  contextoRedacao.value = '';
+  toggleRevisaoExtra();
+
+  materiasPlano.value = '';
+  diasProva.value = '';
+  horasDia.value = '';
+  diaRevisao.checked = true;
+  diaDescanso.checked = true;
+  (function resetDate(){
+    const hoje = new Date();
+    const yyyy = hoje.getFullYear();
+    const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoje.getDate()).padStart(2, '0');
+    dataInicioPlano.value = `${yyyy}-${mm}-${dd}`;
+  })();
+
+  temaSimulado.value = '';
+  numQuestoes.value = '';
+  dificuldadeSimulado.selectedIndex = 0;
+  modeloSimulado.selectedIndex = 0;
+  gabaritoComentado.checked = true;
+  tempoSimulado.value = '';
+  tiposSimulado.forEach(c => c.checked = false);
+  document.getElementById('s1').checked = true;
+
+  serie.value = '';
+  humanizado.checked = false;
+
+  build();
+});
+
+/* ---------- Tema claro/escuro ---------- */
+const themeToggle = document.getElementById('themeToggle');
+
+function applyTheme(theme){
+  if(theme === 'dark'){
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeToggle.textContent = '☀️';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    themeToggle.textContent = '🌙';
+  }
+}
+
+async function loadTheme(){
+  try{
+    const res = await window.storage.get('theme', false);
+    if(res && res.value) applyTheme(res.value);
+  }catch(e){ /* sem tema salvo ainda, usa o padrão claro */ }
+}
+
+themeToggle.addEventListener('click', async () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const next = isDark ? 'light' : 'dark';
+  applyTheme(next);
+  try{ await window.storage.set('theme', next, false); }catch(e){ /* preferência de tema não pôde ser salva, mas o tema já foi aplicado na tela */ }
+});
+
+loadTheme();
+
+/* ---------- Histórico de materiais gerados ---------- */
+const historyList = document.getElementById('historyList');
+const historyEmpty = document.getElementById('historyEmpty');
+
+function renderHistory(items){
+  historyList.innerHTML = '';
+  if(!items || items.length === 0){
+    historyEmpty.style.display = 'block';
+    return;
+  }
+  historyEmpty.style.display = 'none';
+  items.slice().reverse().forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'history-item';
+
+    const textSpan = document.createElement('span');
+    textSpan.className = 'hi-text';
+    textSpan.textContent = item.preview;
+
+    const dateSpan = document.createElement('span');
+    dateSpan.className = 'hi-date';
+    dateSpan.textContent = item.date;
+
+    const useBtn = document.createElement('button');
+    useBtn.textContent = 'Usar';
+    useBtn.addEventListener('click', () => {
+      promptText.value = item.full;
     });
 
-    /* ---------- Detecção de sistema e lojas de app ---------- */
-    function getPlatform() {
-      const ua = navigator.userAgent || '';
-      if (/iPhone|iPad|iPod/i.test(ua)) return 'ios';
-      if (/Android/i.test(ua)) return 'android';
-      return 'desktop';
-    }
+    const delBtn = document.createElement('button');
+    delBtn.className = 'hi-delete';
+    delBtn.setAttribute('aria-label', 'Excluir este item do histórico');
+    delBtn.title = 'Excluir';
+    delBtn.textContent = '🗑️';
+    delBtn.addEventListener('click', () => deleteHistoryItem(item.id));
 
-    const STORE_LINKS = {
-      chatgpt: {
-        ios: 'https://apps.apple.com/app/chatgpt/id6448311069',
-        android: 'https://play.google.com/store/apps/details?id=com.openai.chatgpt'
-      },
-      claude: {
-        ios: 'https://apps.apple.com/app/claude/id6473753684',
-        android: 'https://play.google.com/store/apps/details?id=com.anthropic.claude'
-      },
-      gemini: {
-        ios: 'https://apps.apple.com/app/google-gemini/id6477489729',
-        android: 'https://play.google.com/store/apps/details?id=com.google.android.apps.bard'
-      },
-      copilot: {
-        ios: 'https://apps.apple.com/app/microsoft-copilot/id6472538445',
-        android: 'https://play.google.com/store/apps/details?id=com.microsoft.copilot'
-      }
-    };
+    div.appendChild(textSpan);
+    div.appendChild(dateSpan);
+    div.appendChild(useBtn);
+    div.appendChild(delBtn);
+    historyList.appendChild(div);
+  });
+}
 
-    /* Abre o link universal numa aba nova (mais confiável do que trocar a página
-       atual, especialmente dentro de pré-visualizações/iframes). No celular, se o
-       app estiver instalado, o próprio sistema intercepta e abre o aplicativo;
-       se não estiver, abre a versão web no navegador. */
-    function tryOpenApp(appName, appUrl) {
-      window.open(appUrl, '_blank', 'noopener');
-    }
+async function getHistoryItems(){
+  try{
+    const res = await window.storage.get('history', false);
+    if(res && res.value) return JSON.parse(res.value);
+  }catch(e){ /* ainda não existe histórico salvo */ }
+  return [];
+}
 
-    function getDownloadLink(appName) {
-      const platform = getPlatform();
-      if (platform === 'ios' || platform === 'android') return STORE_LINKS[appName][platform];
-      return null;
-    }
+async function loadHistory(){
+  const items = await getHistoryItems();
+  renderHistory(items);
+}
 
-    /* ---------- Modal de confirmação ---------- */
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalIcon = document.getElementById('modalIcon');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalText = document.getElementById('modalText');
-    const modalYes = document.getElementById('modalYes');
-    const modalNo = document.getElementById('modalNo');
-    let pendingAction = null;
+async function saveToHistory(fullPrompt){
+  if(!fullPrompt.trim()) return;
+  const items = await getHistoryItems();
 
-    const modalDownload = document.getElementById('modalDownload');
+  const preview = fullPrompt.split('\n')[0].slice(0, 60);
+  const date = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  const id = Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+  items.push({ id, preview, date, full: fullPrompt });
 
-    function openConfirmModal({ icon, title, text, onConfirm, downloadLink }) {
-      modalIcon.textContent = icon;
-      modalTitle.textContent = title;
-      modalText.textContent = text;
-      pendingAction = onConfirm;
-      if (downloadLink) {
-        modalDownload.href = downloadLink;
-        modalDownload.style.display = 'block';
-      } else {
-        modalDownload.style.display = 'none';
-      }
-      modalOverlay.classList.add('show');
-    }
-    function closeConfirmModal() {
-      modalOverlay.classList.remove('show');
-      pendingAction = null;
-    }
-    modalNo.addEventListener('click', closeConfirmModal);
-    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeConfirmModal(); });
-    modalYes.addEventListener('click', () => {
-      if (pendingAction) pendingAction();
-      closeConfirmModal();
-    });
+  const trimmed = items.length > 8 ? items.slice(items.length - 8) : items;
 
-    document.getElementById('chatgptBtn').addEventListener('click', () => {
-      if (!promptText.value.trim()) return;
-      openConfirmModal({
-        icon: '💬',
-        title: 'Abrir o ChatGPT?',
-        text: 'Vamos abrir o ChatGPT com o prompt pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web.',
-        downloadLink: getDownloadLink('chatgpt'),
-        onConfirm: () => {
-          tryOpenApp('chatgpt', 'https://chatgpt.com/?q=' + encodeURIComponent(promptText.value));
-          saveToHistory(promptText.value);
-        }
-      });
-    });
+  try{
+    await window.storage.set('history', JSON.stringify(trimmed), false);
+  }catch(e){ /* histórico não pôde ser salvo neste momento */ }
+  renderHistory(trimmed);
+}
 
-    document.getElementById('claudeBtn').addEventListener('click', () => {
-      if (!promptText.value.trim()) return;
-      openConfirmModal({
-        icon: '✦',
-        title: 'Abrir o Claude?',
-        text: 'Vamos abrir o Claude com o prompt pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web.',
-        downloadLink: getDownloadLink('claude'),
-        onConfirm: () => {
-          tryOpenApp('claude', 'https://claude.ai/new?q=' + encodeURIComponent(promptText.value));
-          saveToHistory(promptText.value);
-        }
-      });
-    });
+async function deleteHistoryItem(id){
+  const items = await getHistoryItems();
+  const remaining = items.filter(it => it.id !== id);
+  try{
+    await window.storage.set('history', JSON.stringify(remaining), false);
+  }catch(e){ /* exclusão não pôde ser salva neste momento */ }
+  renderHistory(remaining);
+}
 
-    document.getElementById('geminiBtn').addEventListener('click', () => {
-      if (!promptText.value.trim()) return;
-      openConfirmModal({
-        icon: '✨',
-        title: 'Abrir o Gemini?',
-        text: 'Vamos abrir o Gemini com o prompt pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web. Se o texto não vier preenchido automaticamente, é só colar (já está copiado).',
-        downloadLink: getDownloadLink('gemini'),
-        onConfirm: () => {
-          tryOpenApp('gemini', 'https://gemini.google.com/app?q=' + encodeURIComponent(promptText.value));
-          saveToHistory(promptText.value);
-        }
-      });
-    });
+document.getElementById('clearHistoryBtn').addEventListener('click', async () => {
+  try{
+    await window.storage.set('history', JSON.stringify([]), false);
+  }catch(e){ /* ignora */ }
+  renderHistory([]);
+});
 
-    document.getElementById('copilotBtn').addEventListener('click', () => {
-      if (!promptText.value.trim()) return;
-      openConfirmModal({
-        icon: '🧭',
-        title: 'Abrir o Copilot?',
-        text: 'Vamos abrir o Copilot com o prompt pronto. Se o aplicativo estiver instalado no seu celular, ele deve abrir direto; senão, abre a versão web. Se o texto não vier preenchido automaticamente, é só colar (já está copiado).',
-        downloadLink: getDownloadLink('copilot'),
-        onConfirm: () => {
-          tryOpenApp('copilot', 'https://copilot.microsoft.com/?q=' + encodeURIComponent(promptText.value));
-          saveToHistory(promptText.value);
-        }
-      });
-    });
+loadHistory();
 
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      materia.value = '';
-      tema.value = '';
-      nivel.value = '';
-      tamanho.value = '';
-      contexto.value = '';
-      tipos.forEach(c => c.checked = false);
-      document.getElementById('f1').checked = true;
-
-      temaRedacao.value = '';
-      modeloRedacao.selectedIndex = 0;
-      tiposRedacao.forEach(c => c.checked = false);
-      textoRedacao.value = '';
-      tamanhoRedacao.value = '';
-      contextoRedacao.value = '';
-      toggleRevisaoExtra();
-
-      materiasPlano.value = '';
-      diasProva.value = '';
-      horasDia.value = '';
-      diaRevisao.checked = true;
-      diaDescanso.checked = true;
-      (function resetDate() {
-        const hoje = new Date();
-        const yyyy = hoje.getFullYear();
-        const mm = String(hoje.getMonth() + 1).padStart(2, '0');
-        const dd = String(hoje.getDate()).padStart(2, '0');
-        dataInicioPlano.value = `${yyyy}-${mm}-${dd}`;
-      })();
-
-      temaSimulado.value = '';
-      numQuestoes.value = '';
-      dificuldadeSimulado.selectedIndex = 0;
-      modeloSimulado.selectedIndex = 0;
-      gabaritoComentado.checked = true;
-      tempoSimulado.value = '';
-      tiposSimulado.forEach(c => c.checked = false);
-      document.getElementById('s1').checked = true;
-
-      serie.value = '';
-      humanizado.checked = false;
-
-      build();
-    });
-
-    /* ---------- Tema claro/escuro ---------- */
-    const themeToggle = document.getElementById('themeToggle');
-
-    function applyTheme(theme) {
-      if (theme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-        themeToggle.textContent = '🌙';
-      }
-    }
-
-    async function loadTheme() {
-      try {
-        const res = await window.storage.get('theme', false);
-        if (res && res.value) applyTheme(res.value);
-      } catch (e) { /* sem tema salvo ainda, usa o padrão claro */ }
-    }
-
-    themeToggle.addEventListener('click', async () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const next = isDark ? 'light' : 'dark';
-      applyTheme(next);
-      try { await window.storage.set('theme', next, false); } catch (e) { /* preferência de tema não pôde ser salva, mas o tema já foi aplicado na tela */ }
-    });
-
-    loadTheme();
-
-    /* ---------- Histórico de prompts ---------- */
-    const historyList = document.getElementById('historyList');
-    const historyEmpty = document.getElementById('historyEmpty');
-
-    function renderHistory(items) {
-      historyList.innerHTML = '';
-      if (!items || items.length === 0) {
-        historyEmpty.style.display = 'block';
-        return;
-      }
-      historyEmpty.style.display = 'none';
-      items.slice().reverse().forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'history-item';
-        const textSpan = document.createElement('span');
-        textSpan.className = 'hi-text';
-        textSpan.textContent = item.preview;
-        const dateSpan = document.createElement('span');
-        dateSpan.className = 'hi-date';
-        dateSpan.textContent = item.date;
-        const useBtn = document.createElement('button');
-        useBtn.textContent = 'Usar';
-        useBtn.addEventListener('click', () => {
-          promptText.value = item.full;
-        });
-        div.appendChild(textSpan);
-        div.appendChild(dateSpan);
-        div.appendChild(useBtn);
-        historyList.appendChild(div);
-      });
-    }
-
-    async function loadHistory() {
-      try {
-        const res = await window.storage.get('history', false);
-        if (res && res.value) {
-          renderHistory(JSON.parse(res.value));
-        } else {
-          renderHistory([]);
-        }
-      } catch (e) {
-        renderHistory([]);
-      }
-    }
-
-    async function saveToHistory(fullPrompt) {
-      if (!fullPrompt.trim()) return;
-      let items = [];
-      try {
-        const res = await window.storage.get('history', false);
-        if (res && res.value) items = JSON.parse(res.value);
-      } catch (e) { items = []; }
-
-      const preview = fullPrompt.split('\n')[0].slice(0, 60);
-      const date = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-      items.push({ preview, date, full: fullPrompt });
-      if (items.length > 8) items = items.slice(items.length - 8);
-
-      try {
-        await window.storage.set('history', JSON.stringify(items), false);
-        renderHistory(items);
-      } catch (e) { /* histórico não pôde ser salvo neste momento */ }
-    }
-
-    document.getElementById('clearHistoryBtn').addEventListener('click', async () => {
-      try {
-        await window.storage.set('history', JSON.stringify([]), false);
-      } catch (e) { /* ignora */ }
-      renderHistory([]);
-    });
-
-    loadHistory();
-
-    document.getElementById('extrasStep').style.display = 'none';
-    build();
-  </script>
+document.getElementById('extrasStep').style.display = 'none';
+build();
+</script>
 </body>
-
 </html>
