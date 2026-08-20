@@ -106,6 +106,91 @@ header{
 .mode-panel{ display:none; }
 .mode-panel.active{ display:block; }
 
+/* ---------- Tela inicial (home orientada a tarefa) ---------- */
+.home-screen{ display:block; }
+.home-screen.hide{ display:none; }
+
+.home-question{
+  font-family:'Fredoka', sans-serif;
+  font-size: 19px;
+  font-weight:600;
+  color: var(--ink);
+  margin: 4px 0 16px;
+  text-align:center;
+}
+
+.home-grid{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.home-card{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  text-align:left;
+  width:100%;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 18px;
+  cursor:pointer;
+  box-shadow: var(--shadow);
+  transition: transform .12s ease, border-color .12s ease;
+  font-family:'Plus Jakarta Sans', sans-serif;
+}
+.home-card:hover{
+  transform: translateY(-2px);
+  border-color: var(--violet);
+}
+.home-card:active{ transform: scale(0.98); }
+
+.home-card-icon{
+  font-size: 26px;
+  flex-shrink:0;
+  width:44px; height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background: linear-gradient(135deg, var(--violet), var(--coral));
+}
+
+.home-card-title{
+  display:block;
+  font-family:'Fredoka', sans-serif;
+  font-weight:600;
+  font-size:15.5px;
+  color: var(--ink);
+}
+.home-card-sub{
+  display:block;
+  font-size:12.5px;
+  color: var(--ink-soft);
+  font-weight:500;
+  margin-top:2px;
+}
+
+/* ---------- Builder (tudo que vem depois da home) ---------- */
+.builder-screen{ display:none; }
+.builder-screen.show{ display:block; }
+
+.back-home{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:none;
+  border:none;
+  color: var(--violet);
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-weight:700;
+  font-size:13.5px;
+  padding: 0 0 14px;
+  cursor:pointer;
+}
+.back-home:hover{ text-decoration:underline; }
+
 .theme-toggle{
   flex-shrink:0;
   width:40px; height:40px;
@@ -595,10 +680,44 @@ button.secondary:active{ transform: scale(0.97); }
     <div class="header-text">
       <span class="eyebrow">Estudai</span>
       <h1>Estudai</h1>
-      <p class="sub">Escolha o tema, o tipo de material e o formato — o Estudai monta automaticamente o comando que a IA precisa pra criar seu material de estudo personalizado.</p>
+      <p class="sub">O Estudai monta automaticamente o comando que a IA precisa pra criar seu material de estudo personalizado.</p>
     </div>
     <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">🌙</button>
   </header>
+
+  <div class="home-screen" id="homeScreen">
+    <p class="home-question">O que você quer fazer hoje?</p>
+    <div class="home-grid">
+      <button class="home-card" data-goal="aprender">
+        <span class="home-card-icon">📚</span>
+        <span class="home-card-title">Quero aprender</span>
+        <span class="home-card-sub">Explique um assunto para mim.</span>
+      </button>
+      <button class="home-card" data-goal="praticar">
+        <span class="home-card-icon">📝</span>
+        <span class="home-card-title">Quero praticar</span>
+        <span class="home-card-sub">Crie questões e um simulado.</span>
+      </button>
+      <button class="home-card" data-goal="revisar">
+        <span class="home-card-icon">🔄</span>
+        <span class="home-card-title">Quero revisar</span>
+        <span class="home-card-sub">Revise o que já estudei.</span>
+      </button>
+      <button class="home-card" data-goal="organizar">
+        <span class="home-card-icon">📅</span>
+        <span class="home-card-title">Quero me organizar</span>
+        <span class="home-card-sub">Monte meu plano de estudos.</span>
+      </button>
+      <button class="home-card" data-goal="redacao">
+        <span class="home-card-icon">✍️</span>
+        <span class="home-card-title">Quero melhorar minha redação</span>
+        <span class="home-card-sub">Corrija e explique meus erros.</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="builder-screen" id="builderScreen">
+  <button class="back-home" id="backHomeBtn">← Início</button>
 
   <div class="mode-switch" id="modeSwitch">
     <button class="mode-btn active" id="modeBtnEstudos" data-mode="estudos">📚 Estudos</button>
@@ -869,6 +988,8 @@ button.secondary:active{ transform: scale(0.97); }
     <button class="clear-history" id="clearHistoryBtn">Limpar histórico</button>
   </div>
 
+  </div>
+
   <footer>Preencha o tema e marque pelo menos um tipo de material.</footer>
 </div>
 
@@ -967,6 +1088,48 @@ modeBtnEstudos.addEventListener('click', () => setMode('estudos'));
 modeBtnRedacao.addEventListener('click', () => setMode('redacao'));
 modeBtnPlano.addEventListener('click', () => setMode('plano'));
 modeBtnSimulado.addEventListener('click', () => setMode('simulado'));
+
+/* ---------- Navegação: home orientada a tarefa ---------- */
+const homeScreen = document.getElementById('homeScreen');
+const builderScreen = document.getElementById('builderScreen');
+
+function goToBuilder(mode){
+  homeScreen.classList.add('hide');
+  builderScreen.classList.add('show');
+  setMode(mode);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome(){
+  builderScreen.classList.remove('show');
+  homeScreen.classList.remove('hide');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('backHomeBtn').addEventListener('click', goHome);
+
+document.querySelectorAll('.home-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const goal = card.dataset.goal;
+
+    if(goal === 'aprender'){
+      goToBuilder('estudos');
+      const t8 = document.getElementById('t8');
+      if(!Array.from(tipos).some(c => c.checked)) t8.checked = true;
+    } else if(goal === 'revisar'){
+      goToBuilder('estudos');
+      const t10 = document.getElementById('t10');
+      if(!Array.from(tipos).some(c => c.checked)) t10.checked = true;
+    } else if(goal === 'praticar'){
+      goToBuilder('simulado');
+    } else if(goal === 'organizar'){
+      goToBuilder('plano');
+    } else if(goal === 'redacao'){
+      goToBuilder('redacao');
+    }
+    build();
+  });
+});
 
 function build(){
   if(currentMode === 'redacao'){ buildRedacao(); return; }
