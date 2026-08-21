@@ -357,6 +357,47 @@ select{
   font-size:14px;
 }
 
+.preset-chip label{
+  font-size:14px;
+  padding: 10px 16px;
+}
+
+details.personalize{
+  margin-left:36px;
+  margin-top:14px;
+}
+details.personalize summary{
+  list-style:none;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:700;
+  color: var(--violet);
+  padding: 8px 0;
+  user-select:none;
+}
+details.personalize summary::-webkit-details-marker{ display:none; }
+details.personalize summary:before{
+  content:'▸ ';
+}
+details.personalize[open] summary:before{
+  content:'▾ ';
+}
+.personalize-body{
+  margin-top:8px;
+  padding: 14px;
+  background: var(--field-bg);
+  border-radius: 12px;
+  border: 1.5px dashed var(--line);
+}
+.personalize-body .chips{ margin-left:0; }
+.personalize-body .radio-group{ margin-left:0; }
+.personalize-body .row{ margin-left:0; }
+.row-pair{
+  display:flex;
+  gap:10px;
+}
+.row-pair .row{ flex:1; min-width:0; }
+
 .radio-group{
   display:flex;
   flex-wrap:wrap;
@@ -405,6 +446,90 @@ select{
   color:#fff;
 }
 .output-box .step-num{ background: var(--sun); color: var(--ink); }
+
+.result-hero{
+  text-align:center;
+  padding: 6px 4px 4px;
+}
+.result-icon{
+  font-size:32px;
+  margin-bottom:8px;
+  line-height:1;
+}
+#resultTitle{
+  font-family:'Fredoka', sans-serif;
+  font-size:19px;
+  font-weight:600;
+  margin:0 0 6px;
+  color:#fff;
+  line-height:1.25;
+}
+.result-sub{
+  font-size:13px;
+  color: rgba(255,255,255,0.82);
+  margin:0 0 20px;
+  line-height:1.45;
+}
+
+.ai-grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:10px;
+  margin-bottom: 10px;
+}
+.ai-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  background: rgba(255,255,255,0.14);
+  border: 1.5px solid rgba(255,255,255,0.28);
+  border-radius: 14px;
+  padding: 14px 8px;
+  color:#fff;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-size: 21px;
+  cursor:pointer;
+  transition: all .15s ease;
+}
+.ai-btn span{
+  font-size:12px;
+  font-weight:700;
+}
+.ai-btn:not(:disabled):hover{
+  background: rgba(255,255,255,0.24);
+  transform: translateY(-2px);
+}
+.ai-btn:not(:disabled):active{ transform: scale(0.96); }
+.ai-btn:disabled{
+  opacity:0.35;
+  cursor:not-allowed;
+}
+
+.reveal-material{ margin-top: 8px; }
+.reveal-material summary{
+  cursor:pointer;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-weight:700;
+  font-size:12.5px;
+  color: rgba(255,255,255,0.8);
+  list-style:none;
+  padding: 8px 0;
+  user-select:none;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.reveal-material summary::-webkit-details-marker{ display:none; }
+.reveal-material summary::before{
+  content:'▸';
+  font-size:11px;
+  transition: transform .15s ease;
+  display:inline-block;
+}
+.reveal-material[open] summary::before{ transform: rotate(90deg); }
+.reveal-body{ margin-top:10px; }
 
 #promptText{
   width:100%;
@@ -741,56 +866,65 @@ button.secondary:active{ transform: scale(0.97); }
   </div>
 
   <div class="step">
-    <h2><span class="step-num">2</span>Tipo de material</h2>
-    <p class="hint">Marque um ou mais formatos que você quer receber.</p>
-    <div class="chips" id="tipos">
-      <div class="chip"><input type="checkbox" id="t1" value="Mapa mental (em formato de tópicos e sub-tópicos indentados, mostrando as conexões entre os conceitos)"><label for="t1">Mapa mental</label></div>
-      <div class="chip"><input type="checkbox" id="t2" value="Resumo completo e organizado por sub-temas"><label for="t2">Resumo</label></div>
-      <div class="chip"><input type="checkbox" id="t3" value="Bloco de notas com os pontos-chave em frases curtas e diretas"><label for="t3">Bloco de notas</label></div>
-      <div class="chip"><input type="checkbox" id="t4" value="Flashcards no formato pergunta/resposta (pelo menos 10 cards)"><label for="t4">Flashcards</label></div>
-      <div class="chip"><input type="checkbox" id="t5" value="Lista de questões de revisão com gabarito comentado ao final"><label for="t5">Questões de revisão</label></div>
-      <div class="chip"><input type="checkbox" id="t6" value="Linha do tempo (se o tema tiver uma progressão cronológica ou de etapas)"><label for="t6">Linha do tempo</label></div>
-      <div class="chip"><input type="checkbox" id="t7" value="Quadro comparativo (tabela) entre os conceitos ou eventos principais do tema"><label for="t7">Quadro comparativo</label></div>
-      <div class="chip"><input type="checkbox" id="t8" value="Explicação didática, como se estivesse ensinando o tema do zero para alguém que nunca viu o assunto"><label for="t8">Explicação didática</label></div>
-      <div class="chip"><input type="checkbox" id="t10" value="Revisão do conteúdo que eu já estudei: destaque os pontos principais para reforçar, aponte o que costuma ser mais cobrado ou confundido, e termine com um mini teste rápido de autoavaliação (perguntas com gabarito) sobre o que foi revisado"><label for="t10">Revisão</label></div>
+    <h2><span class="step-num">2</span>Como você quer estudar?</h2>
+    <p class="hint">Escolha um ou mais.</p>
+    <div class="chips" id="presets">
+      <div class="chip preset-chip"><input type="checkbox" id="p-entender" data-target="t8"><label for="p-entender">🧠 Entender</label></div>
+      <div class="chip preset-chip"><input type="checkbox" id="p-resumir" data-target="t2"><label for="p-resumir">📚 Resumir</label></div>
+      <div class="chip preset-chip"><input type="checkbox" id="p-memorizar" data-target="t4"><label for="p-memorizar">🃏 Memorizar</label></div>
+      <div class="chip preset-chip"><input type="checkbox" id="p-praticar" data-target="t5"><label for="p-praticar">📝 Praticar</label></div>
+      <div class="chip preset-chip"><input type="checkbox" id="p-revisar" data-target="t10"><label for="p-revisar">🔄 Revisar</label></div>
     </div>
-  </div>
 
-  <div class="step">
-    <h2><span class="step-num">3</span>Formato da entrega</h2>
-    <p class="hint">Você quer receber em texto, em imagem, ou nos dois?</p>
-    <div class="radio-group" id="formatoGroup" style="margin-left:36px;">
-      <div class="radio-chip"><input type="radio" name="formato" id="f1" value="texto" checked><label for="f1">✍️ Só texto</label></div>
-      <div class="radio-chip"><input type="radio" name="formato" id="f2" value="imagem"><label for="f2">🖼️ Só imagem</label></div>
-      <div class="radio-chip"><input type="radio" name="formato" id="f3" value="ambos"><label for="f3">✨ Texto e imagem</label></div>
-    </div>
-  </div>
+    <details class="personalize">
+      <summary>🎯 Ajustar do meu jeito</summary>
+      <div class="personalize-body">
+        <p class="hint" style="margin-left:0;">Escolha exatamente o que quer receber.</p>
+        <div class="chips" id="tipos">
+          <div class="chip"><input type="checkbox" id="t1" value="Mapa mental (em formato de tópicos e sub-tópicos indentados, mostrando as conexões entre os conceitos)"><label for="t1">Mapa mental</label></div>
+          <div class="chip"><input type="checkbox" id="t2" value="Resumo completo e organizado por sub-temas"><label for="t2">Resumo</label></div>
+          <div class="chip"><input type="checkbox" id="t3" value="Anotações guiadas com os pontos-chave em frases curtas e diretas"><label for="t3">Anotações guiadas</label></div>
+          <div class="chip"><input type="checkbox" id="t4" value="Flashcards no formato pergunta/resposta (pelo menos 10 cards)"><label for="t4">Flashcards</label></div>
+          <div class="chip"><input type="checkbox" id="t5" value="Lista de questões de revisão com gabarito comentado ao final"><label for="t5">Questões de revisão</label></div>
+          <div class="chip"><input type="checkbox" id="t6" value="Linha do tempo (se o tema tiver uma progressão cronológica ou de etapas)"><label for="t6">Linha do tempo</label></div>
+          <div class="chip"><input type="checkbox" id="t7" value="Quadro comparativo (tabela) entre os conceitos ou eventos principais do tema"><label for="t7">Quadro comparativo</label></div>
+          <div class="chip" style="display:none;"><input type="checkbox" id="t8" value="Explicação didática, como se estivesse ensinando o tema do zero para alguém que nunca viu o assunto"><label for="t8">Explicação didática</label></div>
+          <div class="chip" style="display:none;"><input type="checkbox" id="t10" value="Revisão do conteúdo que eu já estudei: destaque os pontos principais para reforçar, aponte o que costuma ser mais cobrado ou confundido, e termine com um mini teste rápido de autoavaliação (perguntas com gabarito) sobre o que foi revisado"><label for="t10">Revisão</label></div>
+        </div>
 
-  <div class="step">
-    <h2><span class="step-num">4</span>Ajustes finos</h2>
-    <p class="hint">Opcional — deixa o material mais preciso.</p>
-    <div class="row">
-      <span class="row-label">Nível</span>
-      <select id="nivel">
-        <option value="">Não especificar</option>
-        <option value="básico, explicando os conceitos do zero">Básico</option>
-        <option value="intermediário, nível de ensino médio">Intermediário</option>
-        <option value="avançado, nível de vestibular ou concurso">Avançado</option>
-      </select>
-    </div>
-    <div class="row">
-      <span class="row-label">Tamanho do conteúdo</span>
-      <select id="tamanho">
-        <option value="">Não especificar</option>
-        <option value="curto e direto, só o essencial">Curto e direto</option>
-        <option value="médio, com um bom nível de detalhe">Médio</option>
-        <option value="completo e detalhado, cobrindo o tema a fundo">Completo e detalhado</option>
-      </select>
-    </div>
-    <div class="row" style="margin-bottom:0;">
-      <span class="row-label">Contexto (opcional)</span>
-      <input type="text" id="contexto" placeholder="Ex: vou usar isso pra prova de bolsa dia 29">
-    </div>
+        <p class="hint" style="margin-left:0; margin-top:16px;">Formato da entrega.</p>
+        <div class="radio-group" id="formatoGroup">
+          <div class="radio-chip"><input type="radio" name="formato" id="f1" value="texto" checked><label for="f1">✍️ Só texto</label></div>
+          <div class="radio-chip"><input type="radio" name="formato" id="f2" value="imagem"><label for="f2">🖼️ Só imagem</label></div>
+          <div class="radio-chip"><input type="radio" name="formato" id="f3" value="ambos"><label for="f3">✨ Texto e imagem</label></div>
+        </div>
+
+        <div class="row-pair" style="margin-top:16px;">
+          <div class="row" style="margin-bottom:0;">
+            <span class="row-label">Nível</span>
+            <select id="nivel">
+              <option value="">Não especificar</option>
+              <option value="básico, explicando os conceitos do zero">Básico</option>
+              <option value="intermediário, nível de ensino médio">Intermediário</option>
+              <option value="avançado, nível de vestibular ou concurso">Avançado</option>
+            </select>
+          </div>
+          <div class="row" style="margin-bottom:0;">
+            <span class="row-label">Tamanho do conteúdo</span>
+            <select id="tamanho">
+              <option value="">Não especificar</option>
+              <option value="curto e direto, só o essencial">Curto e direto</option>
+              <option value="médio, com um bom nível de detalhe">Médio</option>
+              <option value="completo e detalhado, cobrindo o tema a fundo">Completo e detalhado</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-bottom:0; margin-top:14px;">
+          <span class="row-label">💡 Quer me contar mais? (opcional)</span>
+          <input type="text" id="contexto" placeholder="Ex: tenho prova sexta e tenho dificuldade nesse assunto">
+        </div>
+      </div>
+    </details>
   </div>
   </div>
 
@@ -847,7 +981,7 @@ button.secondary:active{ transform: scale(0.97); }
       </select>
     </div>
     <div class="row" style="margin-bottom:0;">
-      <span class="row-label">Contexto (opcional)</span>
+      <span class="row-label">💡 Quer me contar mais? (opcional)</span>
       <input type="text" id="contextoRedacao" placeholder="Ex: é pra prova de vestibular dia 15">
     </div>
   </div>
@@ -958,8 +1092,16 @@ button.secondary:active{ transform: scale(0.97); }
     <h2><span class="step-num">✧</span>Preferências extras</h2>
     <p class="hint">Só pra redação.</p>
     <div class="row" style="margin-bottom:14px;">
-      <span class="row-label">Série / ano escolar (opcional)</span>
-      <input type="text" id="serie" placeholder="Ex: 9º ano, 3º ano do Ensino Médio...">
+      <span class="row-label">🎓 Nível de estudo (opcional)</span>
+      <select id="serie">
+        <option value="">Não especificar</option>
+        <option value="Ensino Fundamental">Ensino Fundamental</option>
+        <option value="Ensino Médio">Ensino Médio</option>
+        <option value="Vestibular">Vestibular</option>
+        <option value="Concurso">Concurso</option>
+        <option value="Faculdade">Faculdade</option>
+        <option value="Outro">Outro</option>
+      </select>
     </div>
     <div class="chips" style="justify-content:center;">
       <div class="chip"><input type="checkbox" id="humanizado"><label for="humanizado">💬 Usar palavras simples</label></div>
@@ -967,17 +1109,29 @@ button.secondary:active{ transform: scale(0.97); }
   </div>
 
   <div class="output-box">
-    <h2><span class="step-num">5</span>Seu material de estudo</h2>
-    <textarea id="promptText" readonly placeholder="Preencha o tema e marque ao menos um tipo de material acima para gerar seu material de estudo aqui..."></textarea>
-    <div class="actions">
-      <button class="copy" id="copyBtn">Copiar</button>
-      <button class="secondary" id="chatgptBtn">Abrir no ChatGPT ↗</button>
-      <button class="secondary" id="claudeBtn">Abrir no Claude ↗</button>
-      <button class="secondary" id="geminiBtn">Abrir no Gemini ↗</button>
-      <button class="secondary" id="copilotBtn">Abrir no Copilot ↗</button>
-      <button class="secondary" id="clearBtn">Limpar tudo</button>
-      <span class="copied-msg" id="copiedMsg">Copiado!</span>
+    <div class="result-hero" id="resultHero">
+      <div class="result-icon">✨</div>
+      <h2 id="resultTitle">Preencha os campos acima</h2>
+      <p class="result-sub" id="resultSub">Seu material de estudo vai aparecer aqui.</p>
+      <div class="ai-grid">
+        <button class="ai-btn" id="chatgptBtn" disabled>🤖<span>ChatGPT</span></button>
+        <button class="ai-btn" id="claudeBtn" disabled>✦<span>Claude</span></button>
+        <button class="ai-btn" id="geminiBtn" disabled>✨<span>Gemini</span></button>
+        <button class="ai-btn" id="copilotBtn" disabled>🧭<span>Copilot</span></button>
+      </div>
     </div>
+
+    <details class="reveal-material">
+      <summary>👀 Ver o que foi gerado</summary>
+      <div class="reveal-body">
+        <textarea id="promptText" readonly placeholder="Preencha o tema e marque ao menos um tipo de material acima..."></textarea>
+        <div class="actions">
+          <button class="copy" id="copyBtn">Copiar</button>
+          <button class="secondary" id="clearBtn">Limpar tudo</button>
+          <span class="copied-msg" id="copiedMsg">Copiado!</span>
+        </div>
+      </div>
+    </details>
   </div>
 
   <div class="step history-step">
@@ -1015,6 +1169,29 @@ const contexto = document.getElementById('contexto');
 const promptText = document.getElementById('promptText');
 const tipos = document.querySelectorAll('#tipos input[type="checkbox"]');
 const formatoInputs = document.querySelectorAll('input[name="formato"]');
+
+/* ---------- Presets simples "Como você quer estudar" ---------- */
+const presetChips = document.querySelectorAll('#presets input[type="checkbox"]');
+
+function syncPresets(){
+  presetChips.forEach(preset => {
+    const targetId = preset.dataset.target;
+    const targetEl = document.getElementById(targetId);
+    if(targetEl) preset.checked = targetEl.checked;
+  });
+}
+
+presetChips.forEach(preset => {
+  preset.addEventListener('change', () => {
+    const targetEl = document.getElementById(preset.dataset.target);
+    if(targetEl){
+      targetEl.checked = preset.checked;
+    }
+    build();
+  });
+});
+
+tipos.forEach(c => c.addEventListener('change', syncPresets));
 
 /* ---------- Redação: campos e lógica ---------- */
 const temaRedacao = document.getElementById('temaRedacao');
@@ -1132,10 +1309,27 @@ document.querySelectorAll('.home-card').forEach(card => {
 });
 
 function build(){
-  if(currentMode === 'redacao'){ buildRedacao(); return; }
-  if(currentMode === 'plano'){ buildPlano(); return; }
-  if(currentMode === 'simulado'){ buildSimulado(); return; }
-  buildEstudos();
+  if(currentMode === 'redacao'){ buildRedacao(); }
+  else if(currentMode === 'plano'){ buildPlano(); }
+  else if(currentMode === 'simulado'){ buildSimulado(); }
+  else { buildEstudos(); }
+  updateResultUI();
+}
+
+function updateResultUI(){
+  const resultTitle = document.getElementById('resultTitle');
+  const resultSub = document.getElementById('resultSub');
+  const aiButtons = document.querySelectorAll('.ai-btn');
+  const pronto = promptText.value.trim().length > 0;
+
+  if(pronto){
+    resultTitle.textContent = '✨ Seu material está pronto';
+    resultSub.textContent = 'Escolha onde você quer estudar:';
+  } else {
+    resultTitle.textContent = 'Preencha os campos acima';
+    resultSub.textContent = 'Seu material de estudo vai aparecer aqui.';
+  }
+  aiButtons.forEach(btn => { btn.disabled = !pronto; });
 }
 
 function buildSimulado(){
@@ -1253,7 +1447,7 @@ function buildRedacao(){
 
   if(tamanhoRedacao.value) p += `Tamanho: ${tamanhoRedacao.value}.\n`;
   if(contextoRedacao.value.trim()) p += `Contexto adicional: ${contextoRedacao.value.trim()}.\n`;
-  if(serie.value.trim()) p += `Minha série/ano escolar: ${serie.value.trim()}.\n`;
+  if(serie.value.trim()) p += `Meu nível de estudo: ${serie.value.trim()}.\n`;
   if(humanizado.checked) p += `Escreva de forma humanizada e simples, com linguagem natural, fácil de entender, sem parecer um texto robótico ou genérico.\n`;
 
   p += `\nUse linguagem clara, bem estruturada e adequada à norma culta.`;
@@ -1323,6 +1517,7 @@ gabaritoComentado.addEventListener('change', build);
 tiposSimulado.forEach(c => c.addEventListener('change', build));
 
 serie.addEventListener('input', build);
+serie.addEventListener('change', build);
 humanizado.addEventListener('change', build);
 
 document.getElementById('copyBtn').addEventListener('click', async () => {
