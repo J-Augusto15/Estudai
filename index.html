@@ -838,6 +838,11 @@ button.secondary:active{ transform: scale(0.97); }
         <span class="home-card-title">Quero melhorar minha redação</span>
         <span class="home-card-sub">Corrija e explique meus erros.</span>
       </button>
+      <button class="home-card" data-goal="planejar">
+        <span class="home-card-icon">🎨</span>
+        <span class="home-card-title">Planeje do seu jeito</span>
+        <span class="home-card-sub">Monte tudo manualmente, do zero.</span>
+      </button>
     </div>
   </div>
 
@@ -857,7 +862,23 @@ button.secondary:active{ transform: scale(0.97); }
     <p class="hint">Pode ser qualquer assunto, de qualquer matéria.</p>
     <div class="row">
       <span class="row-label">Matéria</span>
-      <input type="text" id="materia" placeholder="Ex: Química, História, Matemática, Inglês...">
+      <select id="materia">
+        <option value="">Selecione a matéria</option>
+        <option value="Português">Português</option>
+        <option value="Matemática">Matemática</option>
+        <option value="Química">Química</option>
+        <option value="Física">Física</option>
+        <option value="Biologia">Biologia</option>
+        <option value="História">História</option>
+        <option value="Geografia">Geografia</option>
+        <option value="Filosofia">Filosofia</option>
+        <option value="Sociologia">Sociologia</option>
+        <option value="Inglês">Inglês</option>
+        <option value="Artes">Artes</option>
+        <option value="Educação Física">Educação Física</option>
+        <option value="outra">Outra...</option>
+      </select>
+      <input type="text" id="materiaOutra" placeholder="Digite a matéria" style="display:none; margin-top:8px;">
     </div>
     <div class="row" style="margin-bottom:0;">
       <span class="row-label">Tema específico</span>
@@ -1162,6 +1183,7 @@ button.secondary:active{ transform: scale(0.97); }
 
 <script>
 const materia = document.getElementById('materia');
+const materiaOutra = document.getElementById('materiaOutra');
 const tema = document.getElementById('tema');
 const nivel = document.getElementById('nivel');
 const tamanho = document.getElementById('tamanho');
@@ -1169,6 +1191,45 @@ const contexto = document.getElementById('contexto');
 const promptText = document.getElementById('promptText');
 const tipos = document.querySelectorAll('#tipos input[type="checkbox"]');
 const formatoInputs = document.querySelectorAll('input[name="formato"]');
+
+/* ---------- Matéria: campo "Outra" e sugestão automática de formato ---------- */
+const MATERIA_DEFAULTS = {
+  'Português': ['t2', 't3'],
+  'Matemática': ['t8', 't5'],
+  'Química': ['t8', 't5'],
+  'Física': ['t8', 't5'],
+  'Biologia': ['t1', 't2'],
+  'História': ['t6', 't2'],
+  'Geografia': ['t2', 't7'],
+  'Filosofia': ['t2', 't8'],
+  'Sociologia': ['t2', 't8'],
+  'Inglês': ['t4', 't3'],
+  'Artes': ['t2'],
+  'Educação Física': ['t2']
+};
+
+function toggleMateriaOutra(){
+  materiaOutra.style.display = (materia.value === 'outra') ? 'block' : 'none';
+}
+
+function applyMateriaDefaults(){
+  const jaEscolheu = Array.from(tipos).some(c => c.checked);
+  if(jaEscolheu) return;
+  const ids = MATERIA_DEFAULTS[materia.value];
+  if(!ids) return;
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.checked = true;
+  });
+  syncPresets();
+}
+
+materia.addEventListener('change', () => {
+  toggleMateriaOutra();
+  applyMateriaDefaults();
+  build();
+});
+toggleMateriaOutra();
 
 /* ---------- Presets simples "Como você quer estudar" ---------- */
 const presetChips = document.querySelectorAll('#presets input[type="checkbox"]');
@@ -1269,11 +1330,13 @@ modeBtnSimulado.addEventListener('click', () => setMode('simulado'));
 /* ---------- Navegação: home orientada a tarefa ---------- */
 const homeScreen = document.getElementById('homeScreen');
 const builderScreen = document.getElementById('builderScreen');
+const modeSwitch = document.getElementById('modeSwitch');
 
-function goToBuilder(mode){
+function goToBuilder(mode, locked){
   homeScreen.classList.add('hide');
   builderScreen.classList.add('show');
   setMode(mode);
+  modeSwitch.style.display = locked ? 'none' : 'flex';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1290,19 +1353,21 @@ document.querySelectorAll('.home-card').forEach(card => {
     const goal = card.dataset.goal;
 
     if(goal === 'aprender'){
-      goToBuilder('estudos');
+      goToBuilder('estudos', true);
       const t8 = document.getElementById('t8');
       if(!Array.from(tipos).some(c => c.checked)) t8.checked = true;
     } else if(goal === 'revisar'){
-      goToBuilder('estudos');
+      goToBuilder('estudos', true);
       const t10 = document.getElementById('t10');
       if(!Array.from(tipos).some(c => c.checked)) t10.checked = true;
     } else if(goal === 'praticar'){
-      goToBuilder('simulado');
+      goToBuilder('simulado', true);
     } else if(goal === 'organizar'){
-      goToBuilder('plano');
+      goToBuilder('plano', true);
     } else if(goal === 'redacao'){
-      goToBuilder('redacao');
+      goToBuilder('redacao', true);
+    } else if(goal === 'planejar'){
+      goToBuilder('estudos', false);
     }
     build();
   });
@@ -1457,7 +1522,7 @@ function buildRedacao(){
 
 function buildEstudos(){
   const t = tema.value.trim();
-  const m = materia.value.trim();
+  const m = materia.value === 'outra' ? materiaOutra.value.trim() : materia.value.trim();
   const selected = Array.from(tipos).filter(c => c.checked).map(c => c.value);
   const formato = Array.from(formatoInputs).find(r => r.checked).value;
 
@@ -1496,7 +1561,7 @@ function buildEstudos(){
   promptText.value = p;
 }
 
-[materia, tema, nivel, tamanho, contexto].forEach(el => el.addEventListener('input', build));
+[tema, nivel, tamanho, contexto, materiaOutra].forEach(el => el.addEventListener('input', build));
 tipos.forEach(c => c.addEventListener('change', build));
 formatoInputs.forEach(r => r.addEventListener('change', build));
 
@@ -1668,6 +1733,8 @@ document.getElementById('copilotBtn').addEventListener('click', () => {
 
 document.getElementById('clearBtn').addEventListener('click', () => {
   materia.value = '';
+  materiaOutra.value = '';
+  toggleMateriaOutra();
   tema.value = '';
   nivel.value = '';
   tamanho.value = '';
